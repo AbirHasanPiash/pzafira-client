@@ -12,7 +12,6 @@ import PasswordResetConfirm from "./auth/PasswordResetConfirm";
 import Activation from "./auth/Activation";
 import Welcome from "./auth/Welcome";
 import ProtectedRoute from "./auth/ProtectedRoute";
-import Shop from "./Shop/Shop";
 import ProductDetails from "./shop/ProductDetails";
 import CartItems from "./shop/CartItems";
 import Wishlist from "./shop/Wishlist";
@@ -35,6 +34,7 @@ import CreateProduct from "./admin/CreateProduct";
 import ProductDetail from "./admin/ProductDetail";
 import UserProfile from "./user/UserProfile";
 import ChangePassword from "./user/ChangePassword";
+import Shop from "./shop/Shop";
 
 const App = () => {
   const { user } = useContext(AuthContext);

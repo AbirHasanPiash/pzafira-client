@@ -1,11 +1,10 @@
 import { useCart } from "./CartContext";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useState } from "react";
 import api from "../api/axios";
 
 const OrderConfirmation = () => {
   const { items: cartItems } = useCart();
-  const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
 
   const subtotal = cartItems.reduce(
