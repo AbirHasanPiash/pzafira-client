@@ -11,7 +11,7 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
-import { useWishlist } from "../Shop/WishlistContext";
+import { useWishlist } from "../shop/WishlistContext";
 
 const Dashboard = () => {
   const { user } = useAuth();
