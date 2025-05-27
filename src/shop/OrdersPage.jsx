@@ -7,7 +7,7 @@ import AuthContext from "../auth/AuthProvider";
 const OrdersPage = () => {
   const { items: orders, fetchOrders, count, next, previous } = useOrders();
   const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = Math.ceil(count / 12);
+  const totalPages = Math.ceil(count / 100);
   const { user } = useContext(AuthContext);
 
   useEffect(() => {

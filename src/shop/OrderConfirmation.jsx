@@ -1,11 +1,14 @@
 import { useCart } from "./CartContext";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import api from "../api/axios";
 
 const OrderConfirmation = () => {
   const { items: cartItems } = useCart();
   const [showModal, setShowModal] = useState(false);
+
+  const location = useLocation();
+  const selectedAddress = location.state?.selectedAddress;
 
   const subtotal = cartItems.reduce(
     (acc, item) => acc + (Number(item.variant?.price || 0) * item.quantity),
@@ -15,6 +18,9 @@ const OrderConfirmation = () => {
   const deliveryCharge = 100;
   const taxAmount = subtotal * taxRate;
   const totalAmount = subtotal + taxAmount + deliveryCharge;
+  const address = selectedAddress.address;
+  const city = selectedAddress.city;
+  const country = selectedAddress.country;
 
   const handlePlaceOrder = () => {
     setShowModal(true);
@@ -31,6 +37,9 @@ const OrderConfirmation = () => {
         amount: totalAmount.toFixed(2),
         cartId,
         totalItems,
+        address,
+        city,
+        country,
       });
   
       if (response.data?.payment_url) {
@@ -49,6 +58,19 @@ const OrderConfirmation = () => {
       <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-8 text-center">
         Order Confirmation
       </h1>
+
+      {selectedAddress && (
+        <div className= "p-4 rounded-lg shadow-sm mb-6">
+          <h2 className="text-lg sm:text-xl font-semibold mb-2">Delivery Address</h2>
+          <p className="text-sm sm:text-base text-gray-700">
+            <strong>{selectedAddress.address}</strong><br />
+            {selectedAddress.city}, {selectedAddress.postal_code}, {selectedAddress.country}
+          </p>
+          {selectedAddress.is_default && (
+            <span className="text-green-600 text-sm font-medium">Default Address</span>
+          )}
+        </div>
+      )}
 
       <div className="bg-white p-4 sm:p-6 md:p-8 rounded-lg shadow-md">
         <h2 className="text-lg sm:text-xl md:text-2xl font-semibold mb-6 text-center sm:text-left">

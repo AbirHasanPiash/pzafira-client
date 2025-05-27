@@ -35,6 +35,8 @@ import ProductDetail from "./admin/ProductDetail";
 import UserProfile from "./user/UserProfile";
 import ChangePassword from "./user/ChangePassword";
 import Shop from "./shop/Shop";
+import AddressPage from "./shop/AddressPage";
+import ManageAddress from "./shop/ManageAddress";
 
 const App = () => {
   const { user } = useContext(AuthContext);
@@ -96,6 +98,22 @@ const App = () => {
             element={
               <ProtectedRoute>
                 <OrderConfirmation />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="addreses"
+            element={
+              <ProtectedRoute>
+                <AddressPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="manage-addresses"
+            element={
+              <ProtectedRoute>
+                <ManageAddress />
               </ProtectedRoute>
             }
           />

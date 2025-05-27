@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import api from "../api/axios";
 import { Dialog } from "@headlessui/react";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import AuthContext from "../auth/AuthProvider";
 
 const UserProfile = () => {
@@ -273,6 +273,14 @@ const UserProfile = () => {
           </Dialog.Panel>
         </div>
       </Dialog>
+      <div className="mt-8">
+        <Link
+          to="/manage-addresses"
+          className="mt-4 md:mt-0 bg-black text-white px-8 py-3 rounded-md hover:bg-gray-800 transition"
+        >
+          Manage Addresses
+        </Link>
+      </div>
     </div>
   );
 };

@@ -20,6 +20,7 @@ const PAYMENT_STATUS_CHOICES = [
 ];
 
 const OrderCard = ({ order, isStaff, refresh }) => {
+  console.log(order);
   const [expanded, setExpanded] = useState(false);
   const [status, setStatus] = useState(order.status);
   const [paymentStatus, setPaymentStatus] = useState(order.payment_status);
@@ -72,6 +73,13 @@ const OrderCard = ({ order, isStaff, refresh }) => {
             </p>
           )}
         </div>
+
+        {order.shipping_address && (
+          <div className="text-sm text-gray-600 w-full">
+            <p className="font-semibold text-gray-700 mb-1">Shipping Address</p>
+            <p className="text-gray-600">{order.shipping_address}</p>
+          </div>
+        )}
 
         {/* Right section: Controls, Totals, Toggle */}
         <div className="flex flex-wrap lg:justify-end items-start gap-4 w-full">

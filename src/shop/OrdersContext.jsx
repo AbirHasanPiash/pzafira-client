@@ -67,7 +67,7 @@ export const OrdersProvider = ({ children }) => {
   
       localStorage.setItem("userOrders", JSON.stringify(payload.items));
   
-      dispatch({ type: "SET_ORDERS", payload }); // ✅ correct format
+      dispatch({ type: "SET_ORDERS", payload });
     } catch (err) {
       toast.error("Failed to fetch orders.");
       console.error("Fetch orders error:", err);

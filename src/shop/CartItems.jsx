@@ -153,7 +153,7 @@ const CartItems = () => {
                 .toFixed(2)}
             </h2>
             <Link
-              to="/confirm-order"
+              to="/addreses"
               className="mt-4 md:mt-0 bg-black text-white px-8 py-3 rounded-md hover:bg-gray-800 transition"
             >
               Proceed to Checkout
