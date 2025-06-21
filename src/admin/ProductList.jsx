@@ -16,7 +16,7 @@ export default function ProductList() {
 
   const LOCAL_CACHE_KEY = "pzafira_products_cache";
 
-  const PAGE_SIZE = 12;
+  const PAGE_SIZE = 20;
 
   const fetchProducts = async (search = "", page = 1, scrollToTop = false) => {
     if (scrollToTop) shouldScrollRef.current = true;
