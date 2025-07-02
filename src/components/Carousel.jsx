@@ -42,7 +42,7 @@ const Carousel = () => {
           className={`flex flex-col-reverse lg:flex-row-reverse items-center justify-between gap-8 ${slideClass}`}
         >
           {/* Text */}
-          <div className="flex-1 text-center lg:text-left space-y-4">
+          <div className="flex-1 mt-4 lg:mt-0 text-center lg:text-left space-y-4">
             <h1 className="text-3xl md:text-5xl font-bold text-gray-800">
               {heading}
             </h1>
@@ -63,13 +63,13 @@ const Carousel = () => {
       {/* Arrows */}
       <button
         onClick={goToNext}
-        className="absolute left-4 top-1/2 -translate-y-1/2 opacity-20 hover:opacity-50"
+        className="absolute left-12 lg:left-6 bottom-22 lg:top-1/2 -translate-y-1/2 opacity-20 hover:opacity-50"
       >
         <ChevronLeft size={40} />
       </button>
       <button
         onClick={goToPrev}
-        className="absolute right-4 top-1/2 -translate-y-1/2 opacity-20 hover:opacity-50"
+        className="absolute right-12 lg:right-6 bottom-22 lg:top-1/2 -translate-y-1/2 opacity-20 hover:opacity-50"
       >
         <ChevronRight size={40} />
       </button>

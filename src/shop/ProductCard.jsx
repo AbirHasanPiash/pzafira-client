@@ -10,7 +10,7 @@ const ProductCard = ({ product }) => {
   const { items: wishlist, dispatch } = useWishlist();
 
   const variantId = product.variants?.[0]?.id;
-  const wishlistItem = wishlist.find(item => item.variant.id === variantId);
+  const wishlistItem = wishlist.find((item) => item.variant.id === variantId);
   const isWishlisted = !!wishlistItem;
 
   const toggleWishlist = async () => {
@@ -26,7 +26,9 @@ const ProductCard = ({ product }) => {
         dispatch({ type: "REMOVE_FROM_WISHLIST", payload: wishlistItem.id });
         toast.success("Removed from wishlist");
       } else {
-        const res = await api.post("/wishlist/api/wishlist/", { variant_id: variantId });
+        const res = await api.post("/wishlist/api/wishlist/", {
+          variant_id: variantId,
+        });
         dispatch({ type: "ADD_TO_WISHLIST", payload: res.data });
         toast.success("Added to wishlist");
       }
@@ -38,8 +40,9 @@ const ProductCard = ({ product }) => {
     }
   };
 
-  const primaryImage = product.images?.[0]?.image 
-    || "https://via.placeholder.com/300x400?text=No+Image";
+  const primaryImage =
+    product.images?.[0]?.image ||
+    "https://via.placeholder.com/300x400?text=No+Image";
 
   return (
     <div className="rounded-lg p-4 shadow hover:shadow-lg transition relative group bg-white flex flex-col justify-between">
@@ -54,9 +57,14 @@ const ProductCard = ({ product }) => {
       </Link>
 
       <div className="flex flex-col gap-2">
-        <h3 className="text-xs md:text-sm font-semibold min-h-[48px] line-clamp-2">
+        <h3 className="text-xs md:text-sm font-semibold line-clamp-2">
           {product.name}
         </h3>
+        <h4 className="text-base sm:text-md md:text-xl font-semibold">
+          <span className="text-md sm:text-xl md:text-2xl font-semibold">৳</span>
+          {product.variants[0].price}
+        </h4>
+
         <Link to={`/shop/${product.id}`}>
           <button className="text-xs font-medium text-white bg-black px-3 py-1 rounded-md hover:bg-gray-800 transition">
             Details

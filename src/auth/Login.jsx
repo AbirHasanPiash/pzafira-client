@@ -3,12 +3,11 @@ import { useNavigate, Link } from "react-router-dom";
 import useAuth from "../auth/useAuth";
 import api from "../api/axios";
 import { toast } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
+import "react-toastify/dist/ReactToastify.css";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useWishlist } from "../shop/WishlistContext";
 import { useCart } from "../shop/CartContext";
 import AuthContext from "./AuthProvider";
-
 
 const Login = () => {
   const { refreshWishlist } = useWishlist();
@@ -37,7 +36,7 @@ const Login = () => {
         position: "top-center",
         autoClose: 3000,
       });
-      setTimeout(() => { 
+      setTimeout(() => {
         if (loggedInUser.is_staff) {
           navigate("/admin");
         } else {
@@ -45,7 +44,8 @@ const Login = () => {
         }
       }, 100);
     } catch (err) {
-      const message = err.response?.data?.detail || "Login failed. Please try again.";
+      const message =
+        err.response?.data?.detail || "Login failed. Please try again.";
       toast.error(message, {
         position: "top-center",
         autoClose: 4000,
@@ -72,7 +72,8 @@ const Login = () => {
         autoClose: 5000,
       });
     } catch (err) {
-      const message = err.response?.data?.email?.[0] || "Password reset failed.";
+      const message =
+        err.response?.data?.email?.[0] || "Password reset failed.";
       toast.error(message, {
         position: "top-center",
         autoClose: 4000,
@@ -82,11 +83,46 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8">
+    <div className="h-screen flex items-center justify-center pb-16 px-4 sm:px-6 lg:px-8">
       <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-2xl w-full max-w-md">
-        <h2 className="text-2xl sm:text-3xl font-bold text-center mb-6 text-black">
+        <h2 className="text-2xl sm:text-3xl font-bold text-center mb-2 text-black">
           Login to Your Account
         </h2>
+
+        {/* Demo login section for clients */}
+        <div className="mb-4 text-center text-sm sm:text-base text-gray-700 space-y-2">
+          <p className="text-gray-600 font-medium">
+            For demo purpose, you can login with:
+          </p>
+          <div className="flex justify-center gap-4">
+            <button
+              type="button"
+              onClick={async () => {
+                setForm({ email: "admin@gmail.com", password: "piash2025" });
+                setTimeout(
+                  () => document.getElementById("real-login-btn")?.click(),
+                  100
+                );
+              }}
+              className="bg-blue-600 text-white px-4 py-2 rounded-lg text-xs sm:text-sm hover:bg-blue-700 transition"
+            >
+              Login as Admin
+            </button>
+            <button
+              type="button"
+              onClick={async () => {
+                setForm({ email: "viwefe7324@agiuse.com", password: "elon@2025" });
+                setTimeout(
+                  () => document.getElementById("real-login-btn")?.click(),
+                  100
+                );
+              }}
+              className="bg-green-600 text-white px-4 py-2 rounded-lg text-xs sm:text-sm hover:bg-green-700 transition"
+            >
+              Login as User
+            </button>
+          </div>
+        </div>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <input
@@ -98,7 +134,7 @@ const Login = () => {
             className="p-3 rounded-lg border focus:ring-2 focus:ring-black-300 focus:outline-none text-sm sm:text-base"
             required
           />
-          
+
           {/* Password field with eye icon */}
           <div className="relative">
             <input
@@ -120,6 +156,7 @@ const Login = () => {
           </div>
 
           <button
+            id="real-login-btn"
             type="submit"
             disabled={loading}
             className={`mt-2 bg-black text-white hover:scale-101 duration-300 font-semibold py-3 rounded-lg transition-all text-sm sm:text-base ${
