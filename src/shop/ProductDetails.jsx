@@ -88,6 +88,7 @@ const ProductDetails = () => {
       },
       variant_detail: selectedVariant.id,
       quantity,
+      image : product.images[0].image,
     };
 
     try {

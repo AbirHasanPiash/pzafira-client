@@ -13,6 +13,10 @@ const ProductCard = ({ product }) => {
   const wishlistItem = wishlist.find((item) => item.variant.id === variantId);
   const isWishlisted = !!wishlistItem;
 
+  const primaryImage =
+    product.images?.[0]?.image ||
+    "https://via.placeholder.com/300x400?text=No+Image";
+
   const toggleWishlist = async () => {
     if (!variantId) {
       toast.error("No variant to wishlist!");
@@ -28,6 +32,7 @@ const ProductCard = ({ product }) => {
       } else {
         const res = await api.post("/wishlist/api/wishlist/", {
           variant_id: variantId,
+          image: primaryImage,
         });
         dispatch({ type: "ADD_TO_WISHLIST", payload: res.data });
         toast.success("Added to wishlist");
@@ -40,9 +45,6 @@ const ProductCard = ({ product }) => {
     }
   };
 
-  const primaryImage =
-    product.images?.[0]?.image ||
-    "https://via.placeholder.com/300x400?text=No+Image";
 
   return (
     <div className="rounded-lg p-4 shadow hover:shadow-lg transition relative group bg-white flex flex-col justify-between">
@@ -60,8 +62,8 @@ const ProductCard = ({ product }) => {
         <h3 className="text-xs md:text-sm font-semibold line-clamp-2">
           {product.name}
         </h3>
-        <h4 className="text-base sm:text-md md:text-xl font-semibold">
-          <span className="text-md sm:text-xl md:text-2xl font-semibold">৳</span>
+        <h4 className="text-base sm:text-md font-semibold">
+          <span className="text-md sm:text-xl font-semibold">৳</span>
           {product.variants[0].price}
         </h4>
 

@@ -1,17 +1,40 @@
 import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import carouselData from "../data/carouselData";
+
+const variants = {
+  enter: (direction) => ({
+    x: direction === "left" ? 1000 : -1000,
+    opacity: 0,
+    position: "absolute",
+  }),
+  center: {
+    x: 0,
+    opacity: 1,
+    position: "relative",
+    transition: {
+      duration: 0.7,
+      ease: "easeInOut",
+    },
+  },
+  exit: (direction) => ({
+    x: direction === "left" ? -1000 : 1000,
+    opacity: 0,
+    position: "absolute",
+  }),
+};
 
 const Carousel = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [direction, setDirection] = useState("left"); // default slide: left
+  const [direction, setDirection] = useState("left");
+
   const totalSlides = carouselData.length;
 
-  // Auto Slide (left direction by default)
   useEffect(() => {
     const interval = setInterval(() => {
       goToNext();
-    }, 5000);
+    }, 6000);
     return () => clearInterval(interval);
   }, [currentIndex]);
 
@@ -27,66 +50,78 @@ const Carousel = () => {
 
   const handleDotClick = (index) => {
     if (index === currentIndex) return;
-
     setDirection(index > currentIndex ? "left" : "right");
     setCurrentIndex(index);
   };
 
   const { heading, subheading, image } = carouselData[currentIndex];
-  const slideClass = direction === "left" ? "slide-left" : "slide-right";
 
   return (
-    <div className="w-full bg-white overflow-hidden relative">
-      <div className="px-6 md:px-16 mt-4 mb-8">
-        <div
-          className={`flex flex-col-reverse lg:flex-row-reverse items-center justify-between gap-8 ${slideClass}`}
-        >
+    <section className="relative bg-white py-10 my-20 overflow-hidden">
+      <div className="container px-6 md:px-16 max-w-7xl mx-auto">
+        <div className="flex flex-col-reverse lg:flex-row-reverse items-center gap-12">
           {/* Text */}
-          <div className="flex-1 mt-4 lg:mt-0 text-center lg:text-left space-y-4">
-            <h1 className="text-3xl md:text-5xl font-bold text-gray-800">
+          <motion.div
+            key={currentIndex + "-text"}
+            className="flex-1 flex flex-col justify-center text-center lg:text-left space-y-4"
+            custom={direction}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            variants={variants}
+          >
+            <h1 className="text-3xl md:text-5xl font-extrabold text-gray-800 leading-tight">
               {heading}
             </h1>
-            <p className="text-gray-600 text-lg md:text-xl">{subheading}</p>
-          </div>
+            <p className="text-lg md:text-xl text-gray-600">{subheading}</p>
+          </motion.div>
 
           {/* Image */}
-          <div className="flex-1 w-full">
-            <img
-              src={image}
-              alt={heading}
-              className="w-full h-72 md:h-[400px] object-cover rounded-xl shadow-lg"
-            />
+          <div className="flex-1 relative w-full h-72 md:h-[400px] overflow-hidden rounded-3xl shadow-xl">
+            <AnimatePresence initial={false} custom={direction}>
+              <motion.img
+                key={currentIndex + "-image"}
+                src={image}
+                alt={heading}
+                className="absolute inset-0 w-full h-full object-cover rounded-3xl"
+                custom={direction}
+                variants={variants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+              />
+            </AnimatePresence>
           </div>
         </div>
       </div>
 
       {/* Arrows */}
       <button
-        onClick={goToNext}
-        className="absolute left-12 lg:left-6 bottom-22 lg:top-1/2 -translate-y-1/2 opacity-20 hover:opacity-50"
+        onClick={goToPrev}
+        className="absolute left-4 md:left-10 top-1/2 -translate-y-1/2 bg-white p-2 rounded-full shadow-md hover:scale-105 transition"
       >
-        <ChevronLeft size={40} />
+        <ChevronLeft size={28} />
       </button>
       <button
-        onClick={goToPrev}
-        className="absolute right-12 lg:right-6 bottom-22 lg:top-1/2 -translate-y-1/2 opacity-20 hover:opacity-50"
+        onClick={goToNext}
+        className="absolute right-4 md:right-10 top-1/2 -translate-y-1/2 bg-white p-2 rounded-full shadow-md hover:scale-105 transition"
       >
-        <ChevronRight size={40} />
+        <ChevronRight size={28} />
       </button>
 
-      {/* Indicators */}
-      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2">
+      {/* Dots */}
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-3">
         {carouselData.map((_, index) => (
           <button
             key={index}
             onClick={() => handleDotClick(index)}
-            className={`w-2 h-2 rounded-full ${
-              currentIndex === index ? "bg-black scale-105" : "bg-gray-300"
-            } transition-all duration-300`}
+            className={`w-3 h-3 rounded-full transition-all duration-300 ${
+              currentIndex === index ? "bg-gray-800 scale-110" : "bg-gray-300"
+            }`}
           />
         ))}
       </div>
-    </div>
+    </section>
   );
 };
 

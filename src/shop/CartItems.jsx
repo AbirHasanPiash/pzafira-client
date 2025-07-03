@@ -43,8 +43,8 @@ const CartItems = () => {
           <div className="spinner"></div>
         </div>
       )}
-      <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-8 text-center">
-        My Cart
+      <h1 className="text-xl sm:text-2xl font-bold mb-8 text-center">
+        Cart Items
       </h1>
 
       {cartItems.length === 0 ? (
@@ -53,7 +53,7 @@ const CartItems = () => {
           <div className="mt-4">
             <Link
               to="/shop"
-              className="inline-block bg-black text-white px-6 py-2 rounded-md hover:bg-gray-800 transition"
+              className="inline-block text-sm bg-black text-white px-6 py-2 rounded-md hover:bg-gray-800 transition"
             >
               Continue Shopping
             </Link>
@@ -61,10 +61,18 @@ const CartItems = () => {
         </div>
       ) : (
         <>
-          <div className="flex justify-end mb-6">
+          <div className="flex justify-between mb-6">
+            <button>
+              <Link
+                to="/shop"
+                className="inline-block text-sm bg-black text-white px-6 py-2 rounded-md hover:bg-gray-800 transition"
+              >
+                Continue Shopping
+              </Link>
+            </button>
             <button
               onClick={handleClearCart}
-              className="bg-red-600 text-white px-5 py-2 rounded-md hover:bg-red-700 transition"
+              className="bg-red-600 text-sm text-white px-5 py-2 rounded-md hover:bg-red-700 transition"
             >
               Empty Cart
             </button>
@@ -74,29 +82,56 @@ const CartItems = () => {
             {cartItems.map((item) => (
               <div
                 key={item.id}
-                className="flex flex-col md:flex-row justify-between items-center bg-white shadow-md rounded-lg p-5 hover:shadow-lg transition"
+                className="flex flex-col md:flex-row items-center bg-white shadow-md rounded-lg p-5 gap-6 hover:shadow-lg transition"
               >
-                <div className="flex flex-col md:flex-row items-center gap-6 w-full">
-                  <div className="flex-1 text-center md:text-left">
-                    <h2 className="text-lg md:text-xl font-semibold">
-                      {item.variant?.product || "Unnamed Product"}
-                    </h2>
+                {/* Image */}
+                <div className="w-32 h-32 flex-shrink-0">
+                  <img
+                    src={item.image || "/images/default_img.png"}
+                    alt={item.variant?.product || "Product"}
+                    className="w-full h-full object-cover rounded-md"
+                  />
+                </div>
+
+                {/* Info + Controls */}
+                <div className="flex-1 flex flex-col md:flex-row justify-between items-center w-full gap-4">
+                  {/* Product Info */}
+                  <div className="text-center md:text-left">
+                    <div>
+                      <h2 className="text-lg md:text-xl font-semibold">
+                        {item.variant?.product || "Unnamed Product"}
+                      </h2>
+                      <Link
+                        to={`/shop/${item.variant?.product_id}`}
+                        className="inline-block mt-2 bg-black text-white text-sm px-4 py-1 rounded hover:bg-gray-800 transition"
+                      >
+                        Details
+                      </Link>
+                    </div>
                     <p className="text-xs md:text-sm text-gray-500 mt-1">
                       Color:{" "}
-                      <span className="font-medium">{item.variant?.color || "N/A"}</span>{" "}
+                      <span className="font-medium">
+                        {item.variant?.color || "N/A"}
+                      </span>{" "}
                       | Size:{" "}
-                      <span className="font-medium">{item.variant?.size || "N/A"}</span>
+                      <span className="font-medium">
+                        {item.variant?.size || "N/A"}
+                      </span>
                     </p>
                     <p className="text-sm text-gray-500 mt-1">
                       Unit Price:{" "}
-                      <span className="font-medium"><span className="text-xl">৳</span>{Number(item.variant?.price || 0)}</span>
+                      <span className="font-medium">
+                        <span className="text-xl">৳</span>
+                        {Number(item.variant?.price || 0)}
+                      </span>
                     </p>
                     <p className="text-sm text-gray-500 mt-1">
                       Available Stock: {item.variant?.stock ?? "N/A"}
                     </p>
                   </div>
 
-                  <div className="flex flex-col md:flex-row items-center gap-4">
+                  {/* Controls */}
+                  <div className="flex flex-col items-center md:items-end gap-4">
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() =>
@@ -154,7 +189,7 @@ const CartItems = () => {
             </h2>
             <Link
               to="/addreses"
-              className="mt-4 md:mt-0 bg-black text-white px-8 py-3 rounded-md hover:bg-gray-800 transition"
+              className="mt-4 md:mt-0 text-sm bg-black text-white px-8 py-3 rounded-md hover:bg-gray-800 transition"
             >
               Proceed to Checkout
             </Link>

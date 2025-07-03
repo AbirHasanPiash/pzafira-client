@@ -4,9 +4,11 @@ import Carousel from "./Carousel";
 import Features from "./Features";
 import TrendingNow from "./TrendingNow";
 import OfferSection from "./OfferSection";
+import Hero from "./Hero";
 
 const Home = () => (
   <>
+    <Hero />
     <Carousel />
     <Features />
     <TrendingNow />

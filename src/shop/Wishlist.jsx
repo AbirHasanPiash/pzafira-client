@@ -66,45 +66,57 @@ const Wishlist = () => {
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Your Wishlist</h1>
+        <h1 className="text-xl sm:text-2xl font-bold">Wishlist</h1>
         <Link
           to="/shop"
-          className="text-sm text-blue-600 hover:underline transition"
+          className="px-4 py-2 text-sm bg-black text-white rounded hover:bg-gray-800 transition"
         >
           &larr; Back to Shop
         </Link>
       </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
         {wishlistItems.map((item) => (
           <div
             key={item.id}
-            className="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-lg transition duration-300 flex flex-col"
+            className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 flex flex-col"
           >
-            <Link to={`/shop/${item.variant.product_id}`} className="flex-1">
-              <img
-                src={item.variant.image || "images/default_img.png"}
-                alt={item.variant.product_name}
-                className="h-48 w-full object-cover"
-              />
-              <div className="p-4 space-y-1">
-                <h2 className="text-lg font-semibold text-gray-800 truncate">
-                  {item.variant.product}
-                </h2>
-                <p className="text-sm text-gray-600">
-                  Color: {item.variant.color} | Size: {item.variant.size}
-                </p>
-                <p className="text-base font-medium text-black">
-                  ${item.variant.price}
-                </p>
-              </div>
-            </Link>
-            <button
-              onClick={() => handleRemove(item.id)}
-              className="text-red-600 hover:text-red-800 text-sm font-medium p-3 border-t border-gray-200 transition"
+            {/* Image Section */}
+            <Link
+              to={`/shop/${item.variant.product_id}`}
+              className="relative overflow-hidden"
             >
-              Remove from Wishlist
-            </button>
+              <img
+                src={item.image || "/images/default_img.png"}
+                alt={item.variant?.product}
+                className="w-full max-h-48 object-contain bg-gray-50 p-3 transition-transform duration-300 hover:scale-105"
+              />
+            </Link>
+
+            {/* Info Section */}
+            <div className="px-4 pt-2 pb-4 flex flex-col flex-grow">
+              <h2 className="text-base font-semibold text-gray-800 truncate">
+                {item.variant.product}
+              </h2>
+
+              <p className="text-sm text-gray-600 mt-1">
+                <span className="font-medium">Color:</span> {item.variant.color}
+                <span className="mx-1 text-gray-400">|</span>
+                <span className="font-medium">Size:</span> {item.variant.size}
+              </p>
+
+              <p className="text-base font-bold text-gray-900 mt-2">
+                <span className="text-xl">৳</span>
+                {item.variant.price}
+              </p>
+
+              {/* Remove Button */}
+              <button
+                onClick={() => handleRemove(item.id)}
+                className="mt-4 w-full text-sm bg-red-100 text-red-600 py-2 rounded-md hover:bg-red-600 hover:text-white transition"
+              >
+                Remove from Wishlist
+              </button>
+            </div>
           </div>
         ))}
       </div>
