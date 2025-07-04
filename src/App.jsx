@@ -41,6 +41,10 @@ import AboutUs from "./pages/AboutUs";
 import Careers from "./pages/Careers";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
+import ContactUs from "./pages/ContactUs";
+import FAQs from "./pages/FAQs";
+import ShippingAndReturns from "./pages/ShippingAndReturns";
+import OrderTracking from "./pages/OrderTracking";
 
 const App = () => {
   const { user } = useContext(AuthContext);
@@ -56,6 +60,10 @@ const App = () => {
           <Route path="careers" element={<Careers />} />
           <Route path="privacy-policy" element={<PrivacyPolicy />} />
           <Route path="terms-of-service" element={<TermsOfService />} />
+          <Route path="contact" element={<ContactUs />} />
+          <Route path="faqs" element={<FAQs />} />
+          <Route path="shipping-and-returns" element={<ShippingAndReturns />} />
+          <Route path="order-tracking" element={<OrderTracking />} />
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
           <Route

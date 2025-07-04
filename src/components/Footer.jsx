@@ -12,7 +12,7 @@ const Footer = () => {
   return (
     <footer className="bg-gray-900 text-gray-200 py-12">
       <div className="flex justify-center">
-        <div className="max-w-7xl grid grid-cols-1 px-6 md:px-16 sm:grid-cols-2 md:grid-cols-4 gap-10">
+        <div className="max-w-7xl grid grid-cols-1 px-6 sm:px-10 md:px-16 sm:grid-cols-2 md:grid-cols-4 gap-10">
           {/* Brand */}
 
           <div>
@@ -49,16 +49,16 @@ const Footer = () => {
             <h3 className="text-lg font-semibold mb-4">Support</h3>
             <ul className="space-y-2 text-sm text-gray-400">
               <li className="hover:text-white transition">
-                <a href="#">Contact Us</a>
+                <Link to="/contact">Contact Us</Link>
               </li>
               <li className="hover:text-white transition">
-                <a href="#">FAQs</a>
+                <Link to="/faqs">FAQs</Link>
               </li>
               <li className="hover:text-white transition">
-                <a href="#">Shipping & Returns</a>
+                <Link to="/shipping-and-returns">Shipping & Returns</Link>
               </li>
               <li className="hover:text-white transition">
-                <a href="#">Order Tracking</a>
+                <Link to="/order-tracking">Track Order</Link>
               </li>
             </ul>
           </div>

@@ -33,7 +33,7 @@ const OfferSection = ({ endDate }) => {
 
   return (
     <section className="bg-white w-full flex justify-center py-12 mb-12">
-      <div className="container px-6 md:px-16 max-w-7xl mx-auto flex flex-col-reverse lg:flex-row items-center justify-between">
+      <div className="container px-6 sm:px-10 md:px-16 max-w-7xl mx-auto flex flex-col-reverse lg:flex-row items-center justify-between">
         {/* Left Content */}
         <div className="w-full lg:w-1/2 text-center max-lg:mt-15 lg:text-left space-y-6">
           <h2 className="text-3xl md:text-5xl font-bold text-gray-800 leading-tight">

@@ -37,7 +37,7 @@ const CartItems = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-10">
+    <div className="container max-w-7xl mx-auto px-6 sm:px-10 md:px-16 py-10">
       {loading && (
         <div className="min-h-screen flex justify-center items-center">
           <div className="spinner"></div>

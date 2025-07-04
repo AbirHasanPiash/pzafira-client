@@ -64,7 +64,7 @@ const Wishlist = () => {
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-8">
+    <div className="container px-6 sm:px-10 md:px-16 max-w-7xl mx-auto py-8">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-xl sm:text-2xl font-bold">Wishlist</h1>
         <Link

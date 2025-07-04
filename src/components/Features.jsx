@@ -33,7 +33,7 @@ const FeatureCard = ({ title, subtitle, icon: Icon }) => {
 
 const Features = () => {
   return (
-    <section className="py-12 container px-6 md:px-16 max-w-7xl mx-auto">
+    <section className="bg-white py-12 container px-6 sm:px-10 md:px-16 max-w-7xl mx-auto">
       <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-center mb-10">Why Choose Us</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-10">
         {features.map((feature, index) => (

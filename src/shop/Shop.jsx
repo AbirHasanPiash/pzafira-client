@@ -129,7 +129,7 @@ const Shop = () => {
   };
 
   return (
-    <div className="p-6 pb-16 max-w-7xl mx-auto">
+    <div className="container px-6 sm:px-10 md:px-16 max-w-7xl mt-20 mx-auto pb-16">
       {/* Top Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between lg:justify-center gap-4 mb-6">
         <button

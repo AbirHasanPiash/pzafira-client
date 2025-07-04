@@ -58,7 +58,7 @@ const Carousel = () => {
 
   return (
     <section className="relative bg-white py-10 my-20 overflow-hidden">
-      <div className="container px-6 md:px-16 max-w-7xl mx-auto">
+      <div className="container px-6 sm:px-10 md:px-16 max-w-7xl mx-auto">
         <div className="flex flex-col-reverse lg:flex-row-reverse items-center gap-12">
           {/* Text */}
           <motion.div

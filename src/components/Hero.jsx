@@ -17,7 +17,7 @@ const Hero = () => {
       <div className="absolute inset-0 bg-black/30 z-0" />
 
       {/* Content */}
-      <div className="relative z-10 container max-w-7xl mx-auto px-6 md:px-16 py-20 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center min-h-screen">
+      <div className="relative z-10 container max-w-7xl mx-auto px-6 sm:px-10 md:px-16 py-20 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center min-h-screen">
         {/* Text Content */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}

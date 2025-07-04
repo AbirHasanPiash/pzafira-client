@@ -136,7 +136,7 @@ const ProductDetails = () => {
     return <div className="text-center p-10 text-red-500">{error}</div>;
 
   return (
-    <div className="max-w-7xl mx-auto p-4 sm:p-6">
+    <div className="container px-6 sm:px-10 md:px-16 max-w-7xl mx-auto py-10">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Image Section */}
         <div className="w-full">

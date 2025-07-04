@@ -26,7 +26,7 @@ const NewsletterSection = () => {
       viewport={{ once: true }}
       className="w-full py-14"
     >
-      <div className="container max-w-7xl px-6 md:px-16 mx-auto">
+      <div className="container max-w-7xl px-6 sm:px-10 md:px-16 mx-auto">
         <div className="bg-white/60 backdrop-blur-md border border-gray-200 shadow-xl px-6 sm:px-12 py-10 sm:py-14 space-y-6 md:space-y-8">
           <div className="text-center space-y-4">
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 tracking-tight">

@@ -19,7 +19,7 @@ const TrendingNow = () => {
     <section style={{
     background: "linear-gradient(to bottom, white, #fecdd3, #bfdbfe, #fbcfe8, white)",
   }} className="py-24">
-      <div className="max-w-7xl mx-auto px-6 md:px-16">
+      <div className="max-w-7xl mx-auto px-6 sm:px-10 md:px-16">
         {/* Heading */}
         <motion.h2
           initial={{ opacity: 0, y: -40 }}

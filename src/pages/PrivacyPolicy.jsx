@@ -11,7 +11,7 @@ const PrivacyPolicy = () => {
       initial={{ opacity: 0, y: 40 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      className="min-h-screen py-14 px-6 md:px-16 bg-gray-50 text-gray-800"
+      className="min-h-screen py-14 px-6 sm:px-10 md:px-16 bg-white text-gray-800"
     >
       <div className="max-w-4xl mx-auto space-y-10">
         <div className="text-center space-y-4">
