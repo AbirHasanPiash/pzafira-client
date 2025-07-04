@@ -37,6 +37,10 @@ import ChangePassword from "./user/ChangePassword";
 import Shop from "./shop/Shop";
 import AddressPage from "./shop/AddressPage";
 import ManageAddress from "./shop/ManageAddress";
+import AboutUs from "./pages/AboutUs";
+import Careers from "./pages/Careers";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsOfService from "./pages/TermsOfService";
 
 const App = () => {
   const { user } = useContext(AuthContext);
@@ -48,6 +52,10 @@ const App = () => {
         <Route path="/" element={<Layout />}>
           {/* Public Routes */}
           <Route index element={<Home />} />
+          <Route path="about" element={<AboutUs />} />
+          <Route path="careers" element={<Careers />} />
+          <Route path="privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="terms-of-service" element={<TermsOfService />} />
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
           <Route

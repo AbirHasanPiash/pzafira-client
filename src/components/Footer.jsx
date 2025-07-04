@@ -6,6 +6,7 @@ import {
   MapPin,
   Phone,
 } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
@@ -29,16 +30,16 @@ const Footer = () => {
             <h3 className="text-lg font-semibold mb-4">Company</h3>
             <ul className="space-y-2 text-sm text-gray-400">
               <li className="hover:text-white transition">
-                <a href="#">About Us</a>
+                <Link to="/about">About Us</Link>
               </li>
               <li className="hover:text-white transition">
-                <a href="#">Careers</a>
+                <Link to="/careers">Careers</Link>
               </li>
               <li className="hover:text-white transition">
-                <a href="#">Privacy Policy</a>
+                <Link to="/privacy-policy">Privacy Policy</Link>
               </li>
               <li className="hover:text-white transition">
-                <a href="#">Terms of Service</a>
+                <Link to="/terms-of-service">Terms of Service</Link>
               </li>
             </ul>
           </div>

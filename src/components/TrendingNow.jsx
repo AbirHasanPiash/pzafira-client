@@ -26,7 +26,7 @@ const TrendingNow = () => {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
-          className="text-4xl md:text-5xl font-extrabold text-center text-gray-800 mb-24"
+          className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-center text-gray-800 mb-24"
         >
          Trending Now
         </motion.h2>

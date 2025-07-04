@@ -7,7 +7,7 @@ const Hero = () => {
       {/* Background image for desktop */}
       <div className="absolute inset-0 block z-0">
         <img
-          src="images/hero-bg.png"
+          src="images/hero-bg.jpeg"
           alt="Desktop Background"
           className="h-full w-full object-cover"
         />
