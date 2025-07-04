@@ -4,12 +4,10 @@ import api from "../api/axios";
 import AddressCard from "./AddressCard";
 import AddressForm from "./AddressForm";
 
-
 const ManageAddress = () => {
   const [addresses, setAddresses] = useState([]);
   const [editing, setEditing] = useState(null);
   const [showForm, setShowForm] = useState(false);
-
   const [addressToDelete, setAddressToDelete] = useState(null);
   const [confirmingDelete, setConfirmingDelete] = useState(false);
 
@@ -56,55 +54,109 @@ const ManageAddress = () => {
   }, []);
 
   return (
-    <div className="max-w-2xl mx-auto mt-6">
-      <h2 className="text-xl font-bold mb-4">Saved Addresses</h2>
+    <div className="container max-w-7xl mx-auto px-6 sm:px-10 md:px-16 py-8">
+      <motion.h2
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="text-2xl font-bold mb-6 text-center"
+      >
+        Manage Your Addresses
+      </motion.h2>
 
-      {addresses.map((addr) => (
-        <AddressCard
-          key={addr.id}
-          address={addr}
-          onEdit={(data) => {
-            setEditing(data);
-            setShowForm(true);
-          }}
-          onRequestDelete={(address) => setAddressToDelete(address)}
-        />
-      ))}
+      <AnimatePresence>
+        {addresses.length === 0 && !showForm && (
+          <motion.div
+            className="text-center text-gray-500 mt-10"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <p className="text-lg font-medium">You haven&apos;t saved any address yet.</p>
+            <p className="text-sm mt-2">Click the button below to add your first address.</p>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      {showForm ? (
-        <AddressForm
-          initialData={editing}
-          onSubmit={handleAddOrUpdate}
-          onCancel={() => {
-            setShowForm(false);
-            setEditing(null);
-          }}
-        />
-      ) : (
-        <button
-          className="my-4 px-4 py-2 bg-black hover:bg-black/80 text-white rounded"
-          onClick={() => {
-            setShowForm(true);
-            setEditing(null);
-          }}
+      {addresses.length > 0 && (
+        <motion.h3
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="text-xl font-semibold mb-4"
         >
-          + Add New Address
-        </button>
+          Your saved addresses
+        </motion.h3>
       )}
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {addresses.map((addr) => (
+          <motion.div
+            key={addr.id}
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.3 }}
+            className="w-full"
+          >
+            <AddressCard
+              address={addr}
+              onEdit={(data) => {
+                setEditing(data);
+                setShowForm(true);
+              }}
+              onRequestDelete={setAddressToDelete}
+            />
+          </motion.div>
+        ))}
+      </div>
+
+      <div className="mt-8 text-center">
+        {!showForm ? (
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="px-6 py-2 bg-black hover:bg-black/80 text-white rounded-lg"
+            onClick={() => {
+              setShowForm(true);
+              setEditing(null);
+            }}
+          >
+            + Add New Address
+          </motion.button>
+        ) : (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mt-6"
+          >
+            <AddressForm
+              initialData={editing}
+              onSubmit={handleAddOrUpdate}
+              onCancel={() => {
+                setShowForm(false);
+                setEditing(null);
+              }}
+            />
+          </motion.div>
+        )}
+      </div>
 
       {/* Delete Confirmation Modal */}
       <AnimatePresence>
         {addressToDelete && (
-          <div className="fixed inset-0 backdrop-blur-sm bg-black/30 flex items-center justify-center z-50">
+          <motion.div
+            className="fixed inset-0 backdrop-blur-sm bg-black/30 flex items-center justify-center z-50"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
             <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.8 }}
+              initial={{ scale: 0.8 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.8 }}
               transition={{ duration: 0.3 }}
-              className="bg-white p-6 rounded-lg shadow-lg text-center w-80"
+              className="bg-white p-6 rounded-xl shadow-xl text-center w-80"
             >
-              <h2 className="text-lg font-semibold mb-4">Confirm Delete</h2>
-              <p className="text-gray-600 mb-6 text-sm md:text-base">
+              <h3 className="text-lg font-semibold mb-4">Delete Address</h3>
+              <p className="text-gray-600 mb-6 text-sm">
                 Are you sure you want to delete this address?
               </p>
               <div className="flex justify-center gap-4">
@@ -123,7 +175,7 @@ const ManageAddress = () => {
                 </button>
               </div>
             </motion.div>
-          </div>
+          </motion.div>
         )}
       </AnimatePresence>
     </div>

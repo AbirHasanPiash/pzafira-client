@@ -8,10 +8,10 @@ const AdminLayout = () => {
 
   return (
     <>
-      <div className="flex justify-center items-center">
+      <div className="flex justify-center items-center mt-10">
         <h2 className="hidden md:block text-2xl font-bold mb-8">Admin Panel</h2>
       </div>
-      <div className="flex min-h-screen gap-6">
+      <div className="flex min-h-screen px-6 sm:px-10 md:px-16 gap-6">
         {/* Sidebar */}
         <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
