@@ -17,12 +17,12 @@ import { FaChartLine, FaChartBar } from "react-icons/fa";
 
 function MonthlyOrderChart() {
   const [data, setData] = useState([]);
-  const [chartType, setChartType] = useState("line"); // 'line' or 'bar'
+  const [chartType, setChartType] = useState("line");
 
   useEffect(() => {
     api.get("adminuser/api/monthly-orders/").then((res) => {
       const transformed = res.data.map((item) => ({
-        date: dayjs(item.month).format("MMM, YYYY"), // "July, 2025"
+        date: dayjs(item.month).format("MMM, YYYY"),
         orders: item.count,
       }));
       setData(transformed);
