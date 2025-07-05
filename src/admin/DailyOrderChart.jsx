@@ -39,20 +39,23 @@ function DailyOrderChart() {
 
   return (
     <div className="bg-white p-4 rounded-xl shadow-md relative">
-      <h2 className="text-xl font-semibold mb-4 text-center">
-        📅 Daily Orders (This Month)
-      </h2>
+      <div className="flex justify-between items-center mb-4">
+        {/* Title */}
+        <h2 className="text-xl font-semibold text-center w-full">
+          📅 Daily Orders (This Month)
+        </h2>
 
-      {/* Toggle Icon Button */}
-      <motion.button
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.95 }}
-        onClick={() => setChartType(isLineChart ? "bar" : "line")}
-        className="absolute top-4 right-4 text-gray-600 hover:text-black transition"
-        title={isLineChart ? "Switch to Bar Chart" : "Switch to Line Chart"}
-      >
-        {isLineChart ? <FaChartBar size={22} /> : <FaChartLine size={22} />}
-      </motion.button>
+        {/* Toggle Chart Type Button */}
+        <motion.button
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => setChartType(isLineChart ? "bar" : "line")}
+          className="ml-4 text-gray-600 hover:text-black transition"
+          title={isLineChart ? "Switch to Bar Chart" : "Switch to Line Chart"}
+        >
+          {isLineChart ? <FaChartBar size={22} /> : <FaChartLine size={22} />}
+        </motion.button>
+      </div>
 
       <ResponsiveContainer width="100%" height={300}>
         {isLineChart ? (
