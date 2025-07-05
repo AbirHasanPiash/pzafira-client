@@ -39,12 +39,12 @@ const Carousel = () => {
   }, [currentIndex]);
 
   const goToPrev = () => {
-    setDirection("right");
+    setDirection("left");
     setCurrentIndex((prev) => (prev === 0 ? totalSlides - 1 : prev - 1));
   };
 
   const goToNext = () => {
-    setDirection("left");
+    setDirection("right");
     setCurrentIndex((prev) => (prev === totalSlides - 1 ? 0 : prev + 1));
   };
 
