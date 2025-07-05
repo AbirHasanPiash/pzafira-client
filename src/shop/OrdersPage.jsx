@@ -23,7 +23,7 @@ const OrdersPage = () => {
   }, [currentPage]);
   
   return (
-    <div className="max-w-6xl min-h-screen mx-auto px-4 py-10">
+    <div className="max-w-6xl min-h-screen mx-auto py-16">
       <h1 className="text-3xl font-bold text-center mb-8">All Orders</h1>
 
       {orders.length === 0 ? (

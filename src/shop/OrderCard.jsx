@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import clsx from "clsx";
+import { motion, AnimatePresence } from "framer-motion";
 import api from "../api/axios";
 
 const STATUS_CHOICES = [
@@ -20,7 +21,6 @@ const PAYMENT_STATUS_CHOICES = [
 ];
 
 const OrderCard = ({ order, isStaff, refresh }) => {
-  console.log(order);
   const [expanded, setExpanded] = useState(false);
   const [status, setStatus] = useState(order.status);
   const [paymentStatus, setPaymentStatus] = useState(order.payment_status);
@@ -48,11 +48,28 @@ const OrderCard = ({ order, isStaff, refresh }) => {
   const delivery = 100;
   const grandTotal = Math.round(orderTotal + tax + delivery);
 
+  // Soft colors for each status
+  const statusColor = {
+    pending: "bg-yellow-100 text-yellow-800 border-yellow-300",
+    processing: "bg-blue-100 text-blue-800 border-blue-300",
+    shipped: "bg-indigo-100 text-indigo-800 border-indigo-300",
+    delivered: "bg-green-100 text-green-800 border-green-300",
+    cancelled: "bg-red-100 text-red-800 border-red-300",
+  };
+
+  const paymentColor = {
+    unpaid: "bg-gray-100 text-gray-800 border-gray-300",
+    pending: "bg-yellow-100 text-yellow-800 border-yellow-300",
+    paid: "bg-green-100 text-green-800 border-green-300",
+    failed: "bg-red-100 text-red-800 border-red-300",
+    refunded: "bg-blue-100 text-blue-800 border-blue-300",
+  };
+
   return (
-    <div className="rounded-2xl shadow-md bg-white p-6 transition hover:shadow-lg">
-      {/* Top section: Order Info & Controls */}
+    <div className="rounded-2xl shadow-md bg-white p-6 transition hover:shadow-xl">
+      {/* Header Info */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-        {/* Order Info */}
+        {/* Order Meta */}
         <div className="space-y-1">
           <p className="text-sm text-gray-500">
             <span className="font-semibold text-gray-700">Order ID:</span> #
@@ -74,23 +91,24 @@ const OrderCard = ({ order, isStaff, refresh }) => {
           )}
         </div>
 
+        {/* Shipping */}
         {order.shipping_address && (
-          <div className="text-sm text-gray-600 w-full">
+          <div className="text-sm text-gray-600 w-full lg:max-w-md">
             <p className="font-semibold text-gray-700 mb-1">Shipping Address</p>
-            <p className="text-gray-600">{order.shipping_address}</p>
+            <p className="text-gray-700">{order.shipping_address}</p>
           </div>
         )}
 
-        {/* Right section: Controls, Totals, Toggle */}
-        <div className="flex flex-wrap lg:justify-end items-start gap-4 w-full">
-          {/* Staff Controls or Badges */}
+        {/* Controls */}
+        <div className="flex flex-col sm:flex-row sm:flex-wrap lg:justify-end items-start gap-4 w-full">
+          {/* Staff actions or badges */}
           <div className="flex flex-wrap items-center gap-2">
             {isStaff ? (
               <>
                 <select
                   value={paymentStatus}
                   onChange={(e) => setPaymentStatus(e.target.value)}
-                  className="text-sm px-3 py-2 rounded-md bg-gray-100 border border-gray-300 focus:ring-2 focus:ring-blue-500"
+                  className="text-sm px-3 py-2 rounded-md bg-gray-100 border border-gray-300 focus:ring-2 focus:ring-black"
                 >
                   {PAYMENT_STATUS_CHOICES.map(([val, label]) => (
                     <option key={val} value={val}>
@@ -102,7 +120,7 @@ const OrderCard = ({ order, isStaff, refresh }) => {
                 <select
                   value={status}
                   onChange={(e) => setStatus(e.target.value)}
-                  className="text-sm px-3 py-2 rounded-md bg-gray-100 border border-gray-300 focus:ring-2 focus:ring-blue-500"
+                  className="text-sm px-3 py-2 rounded-md bg-gray-100 border border-gray-300 focus:ring-2 focus:ring-black"
                 >
                   {STATUS_CHOICES.map(([val, label]) => (
                     <option key={val} value={val}>
@@ -114,7 +132,7 @@ const OrderCard = ({ order, isStaff, refresh }) => {
                 <button
                   onClick={handleUpdate}
                   disabled={loading}
-                  className="px-4 py-2 text-sm font-semibold text-white bg-gray-950 hover:bg-gray-800 rounded-md transition"
+                  className="px-4 py-2 text-sm font-semibold text-white bg-black hover:bg-black/80 rounded-md transition"
                 >
                   {loading ? "Saving..." : "Update"}
                 </button>
@@ -124,9 +142,7 @@ const OrderCard = ({ order, isStaff, refresh }) => {
                 <span
                   className={clsx(
                     "text-xs font-semibold px-3 py-1.5 rounded-full border",
-                    order.payment_status === "paid"
-                      ? "bg-green-100 text-green-700 border-green-300"
-                      : "bg-yellow-100 text-yellow-700 border-yellow-300"
+                    paymentColor[order.payment_status]
                   )}
                 >
                   {order.payment_status_display}
@@ -135,9 +151,7 @@ const OrderCard = ({ order, isStaff, refresh }) => {
                 <span
                   className={clsx(
                     "text-xs font-semibold px-3 py-1.5 rounded-full border",
-                    order.status === "processing"
-                      ? "bg-blue-100 text-blue-700 border-blue-300"
-                      : "bg-gray-200 text-gray-700 border-gray-300"
+                    statusColor[order.status]
                   )}
                 >
                   {order.status_display}
@@ -183,42 +197,49 @@ const OrderCard = ({ order, isStaff, refresh }) => {
         </div>
       </div>
 
-      {/* Expandable Order Items */}
-      <div
-        className={clsx(
-          "transition-all duration-500 overflow-hidden",
-          expanded ? "max-h-[1000px] mt-6 border-t pt-4" : "max-h-0"
-        )}
-      >
+      {/* Items with Framer Motion */}
+      <AnimatePresence initial={false}>
         {expanded && (
-          <div className="space-y-4">
-            {order.items.map((item) => (
-              <div
-                key={item.id}
-                className="flex flex-col sm:flex-row sm:items-center justify-between p-3 bg-gray-100 rounded-lg text-sm"
-              >
-                <div>
-                  <p className="font-medium text-gray-800">
-                    {item.variant.product}{" "}
-                    <span className="text-xs text-gray-500">
-                      ({item.variant.color}, {item.variant.size})
-                    </span>
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.4 }}
+            className="overflow-hidden mt-6 border-t pt-4"
+          >
+            <div className="space-y-4">
+              {order.items.map((item) => (
+                <motion.div
+                  key={item.id}
+                  initial={{ y: 10, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ duration: 0.3 }}
+                  className="flex flex-col sm:flex-row sm:items-center justify-between p-3 bg-gray-50 border border-gray-200 rounded-xl text-sm"
+                >
+                  <div>
+                    <p className="font-medium text-gray-800">
+                      {item.variant.product}{" "}
+                      <span className="text-xs text-gray-500">
+                        ({item.variant.color}, {item.variant.size})
+                      </span>
+                    </p>
+                    <p className="text-gray-600">
+                      <span className="text-xl">৳</span> {item.price} ×{" "}
+                      {item.quantity}
+                    </p>
+                  </div>
+                  <p className="font-semibold text-gray-900 text-right mt-2 sm:mt-0">
+                    <span className="text-xl">৳</span>{" "}
+                    {(item.price * item.quantity).toFixed(2)}
                   </p>
-                  <p className="text-gray-500">
-                    <span className="text-xl">৳</span> {item.price} ×{" "}
-                    {item.quantity}
-                  </p>
-                </div>
-                <p className="font-semibold text-gray-900 text-right mt-2 sm:mt-0">
-                  <span className="text-xl">৳</span>{" "}
-                  {(item.price * item.quantity).toFixed(2)}
-                </p>
-              </div>
-            ))}
-          </div>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
         )}
-      </div>
+      </AnimatePresence>
     </div>
   );
 };
+
 export default OrderCard;

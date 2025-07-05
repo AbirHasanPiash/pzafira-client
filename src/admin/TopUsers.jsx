@@ -5,7 +5,7 @@ const TopUsers = () => {
   const { state } = useContext(AdminPanelContext);
 
   return (
-    <div className="bg-white shadow p-6 rounded-xl">
+    <div className="bg-white shadow py-6 pl-6 rounded-xl">
       <h2 className="text-xl font-bold mb-4">Top Users</h2>
       <ul className="space-y-3">
         {state.topUsers.map((user) => (

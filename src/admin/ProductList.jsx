@@ -91,7 +91,7 @@ export default function ProductList() {
   };
 
   return (
-    <section className="p-4 md:p-8 max-w-7xl mx-auto">
+    <section className="pl-4 md:pl-8 max-w-7xl mx-auto">
       <div className="mb-6 flex flex-col md:flex-row justify-between items-center gap-4">
         <input
           type="text"
