@@ -1,39 +1,72 @@
-import { useContext, useEffect, useState } from "react";
+import { useState, useContext } from "react";
+import useSWR from "swr";
 import api from "../api/axios";
 import { Dialog } from "@headlessui/react";
 import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
 import AuthContext from "../auth/AuthProvider";
+import {
+  UserIcon,
+  PhoneIcon,
+  EnvelopeIcon,
+  Cog6ToothIcon,
+  PencilSquareIcon,
+  TrashIcon,
+  LockClosedIcon,
+  MapPinIcon,
+} from "@heroicons/react/24/outline";
+
+// ✅ SWR Fetcher function
+const fetcher = (url) => api.get(url).then((res) => res.data);
 
 const UserProfile = () => {
-  const [user, setUser] = useState(null);
-  const [isUpdateOpen, setIsUpdateOpen] = useState(false);
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const { logout } = useContext(AuthContext);
   const navigate = useNavigate();
+
+  // ✅ SWR replaces useEffect-based fetching
+  const {
+    data: user,
+    error,
+    mutate,
+  } = useSWR("/auth/profile/", fetcher, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: true,
+  });
+
+  const [isUpdateOpen, setIsUpdateOpen] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
+
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
     phone: "",
     profile_picture: null,
   });
-  const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
 
-  useEffect(() => {
-    api
-      .get("/auth/profile/")
-      .then((res) => {
-        setUser(res.data);
-        setFormData({
-          first_name: res.data.first_name,
-          last_name: res.data.last_name,
-          phone: res.data.phone || "",
-          profile_picture: null,
-        });
-      })
-      .catch(() => toast.error("Failed to load user profile"));
-  }, []);
+  // When profile data loads, set form defaults
+  if (user && !formData.first_name && !formData.last_name) {
+    setFormData({
+      first_name: user.first_name,
+      last_name: user.last_name,
+      phone: user.phone || "",
+      profile_picture: null,
+    });
+  }
 
+  if (error)
+    return (
+      <div className="text-center text-red-500 mt-10">
+        Failed to load profile.
+      </div>
+    );
+
+  if (!user)
+    return (
+      <div className="text-center text-gray-500 py-20">Loading profile...</div>
+    );
+
+  // ✅ Update Profile
   const handleUpdateSubmit = async (e) => {
     e.preventDefault();
     const data = new FormData();
@@ -46,8 +79,7 @@ const UserProfile = () => {
 
     try {
       const res = await api.patch("/auth/profile/", data);
-      setUser(res.data);
-      console.log(res.data);
+      mutate(res.data, false); // Optimistic update
       setIsUpdateOpen(false);
       toast.success("Profile updated successfully!");
     } catch {
@@ -55,8 +87,7 @@ const UserProfile = () => {
     }
   };
 
-  const confirmDeleteAccount = () => setIsDeleteConfirmOpen(true);
-
+  // ✅ Delete Account
   const handleDeleteAccount = async () => {
     try {
       await api.delete("/auth/profile/");
@@ -70,24 +101,20 @@ const UserProfile = () => {
     }
   };
 
-  const handleChangePassword = () => {
-    navigate("/change-password");
-  };
-
-  if (!user)
-    return (
-      <div className="text-center py-10 text-gray-500">Loading profile...</div>
-    );
+  // ✅ Change Password
+  const handleChangePassword = () => navigate("/change-password");
 
   return (
-    <div className="max-w-3xl min-h-screen mx-auto p-6 sm:p-10">
-      <div className="bg-white shadow-md rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row items-center sm:items-start gap-6 relative">
-        <div className="relative group">
+    <div className="max-w-7xl mx-auto min-h-screen px-6 md:px-10 py-10">
+      {/* Profile Card */}
+      <div className="bg-white rounded-2xl shadow-md p-8 flex flex-col md:flex-row items-center gap-8 transition-all">
+        {/* Profile Image */}
+        <div className="relative">
           <img
             src={
               user.profile_picture ||
               `https://ui-avatars.com/api/?name=${encodeURIComponent(
-                user.first_name + " " + user.last_name
+                `${user.first_name} ${user.last_name}`
               )}`
             }
             alt="Profile"
@@ -95,41 +122,56 @@ const UserProfile = () => {
           />
         </div>
 
-        <div className="flex-1">
-          <h2 className="text-2xl font-semibold text-gray-800">
+        {/* Profile Info */}
+        <div className="flex-1 text-center md:text-left">
+          <h2 className="text-2xl font-bold text-gray-800 flex items-center justify-center md:justify-start gap-2">
+            <UserIcon className="w-6 h-6 text-blue-600" />
             {user.first_name} {user.last_name}
           </h2>
-          <p className="text-gray-500">{user.email}</p>
-          {user.phone && <p className="text-gray-500">📞 {user.phone}</p>}
+          <p className="text-gray-500 flex justify-center md:justify-start items-center gap-2 mt-1">
+            <EnvelopeIcon className="w-4 h-4 text-gray-400" />
+            {user.email}
+          </p>
+          {user.phone && (
+            <p className="text-gray-500 flex justify-center md:justify-start items-center gap-2 mt-1">
+              <PhoneIcon className="w-4 h-4 text-gray-400" /> {user.phone}
+            </p>
+          )}
 
-          <div className="mt-6 flex flex-col sm:flex-row gap-3">
+          <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center md:justify-start">
             <button
               onClick={() => setIsUpdateOpen(true)}
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+              className="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 flex items-center justify-center gap-2"
             >
+              <PencilSquareIcon className="w-5 h-5" />
               Update Profile
             </button>
             <button
               onClick={() => setIsSettingsOpen(true)}
-              className="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 transition"
+              className="bg-gray-100 text-gray-700 px-5 py-2 rounded-lg hover:bg-gray-200 flex items-center justify-center gap-2"
             >
+              <Cog6ToothIcon className="w-5 h-5" />
               Settings
             </button>
           </div>
         </div>
       </div>
 
+      {/* Manage Addresses Button */}
+      <div className="mt-8 flex justify-center md:justify-start">
+        <Link
+          to="/manage-addresses"
+          className="inline-flex items-center gap-2 bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition"
+        >
+          <MapPinIcon className="w-5 h-5" />
+          Manage Addresses
+        </Link>
+      </div>
+
       {/* Update Modal */}
-      <Dialog
-        open={isUpdateOpen}
-        onClose={() => setIsUpdateOpen(false)}
-        className="relative z-50"
-      >
-        <div
-          className="fixed inset-0 bg-black/40 backdrop-blur-sm"
-          aria-hidden="true"
-        />
-        <div className="fixed inset-0 flex items-center justify-center p-4">
+      <Dialog open={isUpdateOpen} onClose={() => setIsUpdateOpen(false)}>
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40" />
+        <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
           <Dialog.Panel className="w-full max-w-lg bg-white rounded-2xl shadow-xl p-6">
             <Dialog.Title className="text-xl font-semibold mb-4 text-gray-800">
               Update Profile
@@ -142,7 +184,7 @@ const UserProfile = () => {
                   setFormData({ ...formData, first_name: e.target.value })
                 }
                 placeholder="First Name"
-                className="w-full border rounded px-3 py-2"
+                className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
                 required
               />
               <input
@@ -152,7 +194,7 @@ const UserProfile = () => {
                   setFormData({ ...formData, last_name: e.target.value })
                 }
                 placeholder="Last Name"
-                className="w-full border rounded px-3 py-2"
+                className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
                 required
               />
               <input
@@ -162,13 +204,13 @@ const UserProfile = () => {
                   setFormData({ ...formData, phone: e.target.value })
                 }
                 placeholder="Phone"
-                className="w-full border rounded px-3 py-2"
+                className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
               />
               <input
                 type="email"
                 value={user.email}
                 disabled
-                className="w-full bg-gray-100 border rounded px-3 py-2 cursor-not-allowed"
+                className="w-full bg-gray-100 border rounded-lg px-3 py-2 text-gray-500 cursor-not-allowed"
               />
               <input
                 type="file"
@@ -190,7 +232,7 @@ const UserProfile = () => {
                 </button>
                 <button
                   type="submit"
-                  className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                  className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
                 >
                   Save Changes
                 </button>
@@ -201,30 +243,25 @@ const UserProfile = () => {
       </Dialog>
 
       {/* Settings Modal */}
-      <Dialog
-        open={isSettingsOpen}
-        onClose={() => setIsSettingsOpen(false)}
-        className="relative z-50"
-      >
-        <div
-          className="fixed inset-0 bg-black/40 backdrop-blur-sm"
-          aria-hidden="true"
-        />
-        <div className="fixed inset-0 flex items-center justify-center p-4">
+      <Dialog open={isSettingsOpen} onClose={() => setIsSettingsOpen(false)}>
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40" />
+        <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
           <Dialog.Panel className="w-full max-w-sm bg-white rounded-2xl shadow-xl p-6 space-y-5">
             <Dialog.Title className="text-lg font-bold text-gray-800">
               Settings
             </Dialog.Title>
             <button
               onClick={handleChangePassword}
-              className="w-full text-left px-4 py-2 border rounded hover:bg-gray-50"
+              className="w-full text-left px-4 py-2 border rounded-lg hover:bg-gray-50 flex items-center gap-2"
             >
+              <LockClosedIcon className="w-5 h-5 text-gray-500" />
               Change Password
             </button>
             <button
-              onClick={confirmDeleteAccount}
-              className="w-full text-left px-4 py-2 border border-red-400 text-red-600 rounded hover:bg-red-50"
+              onClick={() => setIsDeleteConfirmOpen(true)}
+              className="w-full text-left px-4 py-2 border border-red-400 text-red-600 rounded-lg hover:bg-red-50 flex items-center gap-2"
             >
+              <TrashIcon className="w-5 h-5" />
               Delete Account
             </button>
             <div className="text-center pt-2">
@@ -238,49 +275,40 @@ const UserProfile = () => {
           </Dialog.Panel>
         </div>
       </Dialog>
+
+      {/* Delete Confirm Modal */}
       <Dialog
         open={isDeleteConfirmOpen}
         onClose={() => setIsDeleteConfirmOpen(false)}
-        className="relative z-50"
       >
-        <div
-          className="fixed inset-0 bg-black/40 backdrop-blur-sm"
-          aria-hidden="true"
-        />
-        <div className="fixed inset-0 flex items-center justify-center p-4">
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40" />
+        <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
           <Dialog.Panel className="w-full max-w-sm bg-white rounded-2xl shadow-xl p-6">
             <Dialog.Title className="text-lg font-bold text-gray-800 mb-4">
               Confirm Deletion
             </Dialog.Title>
             <p className="text-sm text-gray-600 mb-6">
-              Are you sure you want to delete your account? This action is
-              irreversible.
+              Are you sure you want to delete your account? This action cannot
+              be undone.
             </p>
             <div className="flex justify-end gap-4">
               <button
                 onClick={() => setIsDeleteConfirmOpen(false)}
-                className="px-4 py-2 rounded text-gray-600 hover:underline"
+                className="px-4 py-2 rounded-lg text-gray-600 hover:underline"
               >
                 Cancel
               </button>
               <button
                 onClick={handleDeleteAccount}
-                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 flex items-center gap-1"
               >
+                <TrashIcon className="w-5 h-5" />
                 Delete
               </button>
             </div>
           </Dialog.Panel>
         </div>
       </Dialog>
-      <div className="mt-8">
-        <Link
-          to="/manage-addresses"
-          className="mt-4 md:mt-0 bg-black text-white px-8 py-3 rounded-md hover:bg-gray-800 transition"
-        >
-          Manage Addresses
-        </Link>
-      </div>
     </div>
   );
 };

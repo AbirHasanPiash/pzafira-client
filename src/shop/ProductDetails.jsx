@@ -1,42 +1,38 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import useSWR from "swr";
 import api from "../api/axios";
 import { Star, ChevronLeft, ChevronRight, Plus, Minus } from "lucide-react";
 import { toast } from "react-toastify";
 import { useCart } from "./CartContext";
 import ProductReviews from "./ProductReviews";
 
+// Fetcher for SWR
+const fetcher = (url) => api.get(url).then((res) => res.data);
+
 const ProductDetails = () => {
   const { id } = useParams();
-  const [product, setProduct] = useState(null);
+  const { addToCart } = useCart();
+
+  // Fetch product using SWR
+  const {
+    data: product,
+    error,
+    isLoading,
+    mutate, // for manual refresh
+  } = useSWR(`/products/api/detail-products/${id}/`, fetcher, {
+    revalidateOnFocus: true,
+    shouldRetryOnError: true,
+  });
+
   const [selectedColor, setSelectedColor] = useState("");
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedVariant, setSelectedVariant] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [loading, setLoading] = useState(true);
   const [loadingAddToCart, setLoadingAddToCart] = useState(false);
-  const [error, setError] = useState("");
 
-  const { addToCart } = useCart();
-
-  const fetchProduct = async (showLoading = true) => {
-    if (showLoading) setLoading(true);
-    try {
-      const response = await api.get(`/products/api/detail-products/${id}/`);
-      setProduct(response.data);
-    } catch (err) {
-      console.error(err);
-      setError("Failed to load product details.");
-    } finally {
-      if (showLoading) setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchProduct();
-  }, [id]);
-
+  // Reset selection when product changes
   useEffect(() => {
     setSelectedColor("");
     setSelectedSize("");
@@ -45,18 +41,23 @@ const ProductDetails = () => {
   }, [product]);
 
   useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [id]);
+
+  // Update selected variant when color/size changes
+  useEffect(() => {
     if (product) {
       const variant = product.variants.find(
         (v) => v.color === selectedColor && v.size === selectedSize
       );
       setSelectedVariant(variant || null);
-
       if (variant) setQuantity(1);
     }
   }, [selectedColor, selectedSize, product]);
 
+  // Re-fetch reviews by revalidating SWR cache
   const fetchReviewsAgain = () => {
-    fetchProduct();
+    mutate();
   };
 
   const handleAddToCart = async () => {
@@ -88,7 +89,7 @@ const ProductDetails = () => {
       },
       variant_detail: selectedVariant.id,
       quantity,
-      image : product.images[0].image,
+      image: product.images[0].image,
     };
 
     try {
@@ -114,7 +115,7 @@ const ProductDetails = () => {
   };
 
   const incrementQuantity = () => {
-    if (quantity < selectedVariant.stock) {
+    if (selectedVariant && quantity < selectedVariant.stock) {
       setQuantity((prev) => Number(prev) + 1);
     }
   };
@@ -125,7 +126,8 @@ const ProductDetails = () => {
     }
   };
 
-  if (loading)
+  // Loading & Error states
+  if (isLoading)
     return (
       <div className="min-h-screen flex justify-center items-center">
         <div className="spinner"></div>
@@ -133,8 +135,13 @@ const ProductDetails = () => {
     );
 
   if (error)
-    return <div className="text-center p-10 text-red-500">{error}</div>;
+    return (
+      <div className="text-center p-10 text-red-500">
+        Failed to load product details.
+      </div>
+    );
 
+  // === MAIN UI ===
   return (
     <div className="container px-6 sm:px-10 md:px-16 max-w-7xl mx-auto py-10">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
