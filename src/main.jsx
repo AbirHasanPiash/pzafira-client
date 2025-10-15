@@ -7,18 +7,21 @@ import { AuthProvider } from "./auth/AuthProvider.jsx";
 import { CartProvider } from "./shop/CartContext.jsx";
 import { WishlistProvider } from "./shop/WishlistContext.jsx";
 import { OrdersProvider } from "./shop/OrdersContext.jsx";
+import SWRProvider from "./SWRProvider.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <BrowserRouter>
       <AuthProvider>
-        <CartProvider>
-          <WishlistProvider>
-            <OrdersProvider>
-              <App />
-            </OrdersProvider>
-          </WishlistProvider>
-        </CartProvider>
+        <SWRProvider>
+          <CartProvider>
+            <WishlistProvider>
+              <OrdersProvider>
+                <App />
+              </OrdersProvider>
+            </WishlistProvider>
+          </CartProvider>
+        </SWRProvider>
       </AuthProvider>
     </BrowserRouter>
   </StrictMode>

@@ -1,101 +1,97 @@
-import { useEffect, useState, useCallback, useRef, useLayoutEffect } from "react";
-import api from "../api/axios";
+import { useEffect, useState, useCallback, useLayoutEffect, useMemo } from "react";
+import useSWR, { mutate } from "swr";
 import ProductCard from "./ProductCard";
 import debounce from "lodash/debounce";
 import { NavLink } from "react-router-dom";
-import { toast } from "react-toastify";
 
 export default function ProductList() {
-  const [products, setProducts] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const shouldScrollRef = useRef(false);
-
-  const LOCAL_CACHE_KEY = "pzafira_products_cache";
+  const [shouldScroll, setShouldScroll] = useState(false);
 
   const PAGE_SIZE = 20;
 
-  const fetchProducts = async (search = "", page = 1, scrollToTop = false) => {
-    if (scrollToTop) shouldScrollRef.current = true;
-    setLoading(true);
-    setError(null);
-    try {
-      const params = new URLSearchParams();
-      if (search) params.append("search", search);
-      params.append("page", page);
+  // Global SWR fetcher is already set in SWRConfig (assumed)
+  const { data, error, isLoading } = useSWR(
+    `/products/api/detail-products/?page=${currentPage}`
+  );
 
-      const response = await api.get(
-        `/products/api/detail-products/?${params}`
+  const allProducts = data?.results || [];
+  const totalPages = data?.count ? Math.ceil(data.count / PAGE_SIZE) : 1;
+
+  // === Prefetch next page if exists ===
+  useEffect(() => {
+    if (data && currentPage < totalPages) {
+      const nextPageUrl = `/products/api/detail-products/?page=${currentPage + 1}`;
+      mutate(
+        nextPageUrl,
+        async (prev) => {
+          // Only fetch if not already cached
+          if (!prev) {
+            const res = await fetch(nextPageUrl);
+            return res.json();
+          }
+          return prev;
+        },
+        { revalidate: false }
       );
-      const productData = response.data.results || [];
-
-      setProducts(productData);
-
-      // Calculate total pages from count and PAGE_SIZE
-      const count = response.data.count || 0;
-      setTotalPages(Math.ceil(count / PAGE_SIZE));
-
-      localStorage.setItem(LOCAL_CACHE_KEY, JSON.stringify(productData));
-    } catch (err) {
-      console.error("Error fetching products:", err);
-      const fallback = localStorage.getItem(LOCAL_CACHE_KEY);
-      if (fallback) {
-        setProducts(JSON.parse(fallback));
-        toast.warn("Using cached data due to error.");
-      } else {
-        setError("Failed to load products.");
-      }
-    } finally {
-      setLoading(false);
     }
-  };
+  }, [data, currentPage, totalPages]);
 
-  const debouncedFetch = useCallback(debounce(fetchProducts, 500), []);
 
+  // === Client-side search filtering ===
+  const filteredProducts = useMemo(() => {
+    if (!searchTerm.trim()) return allProducts;
+    const term = searchTerm.toLowerCase();
+    return allProducts.filter(
+      (p) =>
+        p.name?.toLowerCase().includes(term) ||
+        p.description?.toLowerCase().includes(term) ||
+        p.category?.toLowerCase().includes(term) ||
+        p.brand?.toLowerCase().includes(term)
+    );
+  }, [allProducts, searchTerm]);
+
+  // === Scroll to top on page change ===
   useLayoutEffect(() => {
-    if (shouldScrollRef.current) {
+    if (shouldScroll) {
       window.scrollTo({ top: 0, behavior: "smooth" });
-      shouldScrollRef.current = false;
+      setShouldScroll(false);
     }
-  }, [products]);
+  }, [allProducts]);
 
-  useEffect(() => {
-    const cached = localStorage.getItem(LOCAL_CACHE_KEY);
-    if (cached) {
-      setProducts(JSON.parse(cached));
-      setLoading(false);
-    }
-    fetchProducts("", 1, true);
-  }, []);
+  // === Debounced search handler ===
+  const debouncedSearch = useCallback(
+    debounce((value) => setSearchTerm(value), 300),
+    []
+  );
 
-  useEffect(() => {
-    if (searchTerm.trim()) {
-      debouncedFetch(searchTerm, 1, true);
-      setCurrentPage(1);
-    }
-  }, [searchTerm]);
+  const handleSearchChange = (e) => debouncedSearch(e.target.value);
 
-  const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value);
-  };
-
+  // === Page navigation ===
   const handlePageChange = (newPage) => {
     if (newPage >= 1 && newPage <= totalPages) {
       setCurrentPage(newPage);
-      shouldScrollRef.current = true;
-      fetchProducts(searchTerm, newPage, true);
+      setShouldScroll(true);
     }
   };
+
+  // === Error & Loading states ===
+  if (isLoading)
+    return <div className="text-center py-10">Loading products...</div>;
+
+  if (error)
+    return (
+      <div className="text-center text-red-500">
+        Failed to load products.
+      </div>
+    );
 
   return (
     <section className="pl-4 md:pl-8 max-w-7xl mx-auto">
       <div className="mb-6 flex flex-col md:flex-row justify-between items-center gap-4">
         <input
           type="text"
-          value={searchTerm}
           onChange={handleSearchChange}
           placeholder="Search products..."
           className="w-full md:w-1/2 px-4 py-2 border rounded-md shadow-sm"
@@ -108,16 +104,12 @@ export default function ProductList() {
         </NavLink>
       </div>
 
-      {loading ? (
-        <div className="text-center py-10">Loading products...</div>
-      ) : error ? (
-        <div className="text-center text-red-500">{error}</div>
-      ) : products.length === 0 ? (
+      {filteredProducts.length === 0 ? (
         <div className="text-center text-gray-500">No products found.</div>
       ) : (
         <>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
-            {products.map((product) => (
+            {filteredProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
           </div>

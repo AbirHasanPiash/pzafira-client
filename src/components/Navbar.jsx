@@ -49,19 +49,19 @@ const Navbar = () => {
             Shop
           </Link>
           <Link
-            to="/shop"
+            to="/shop?target_audience=men"
             className="transition-transform duration-300 ease-in-out hover:scale-105"
           >
-            Man
+            Men
           </Link>
           <Link
-            to="/shop"
+            to="/shop?target_audience=women"
             className="transition-transform duration-300 ease-in-out hover:scale-105"
           >
-            Woman
+            Women
           </Link>
           <Link
-            to="/shop"
+            to="/shop?target_audience=kids"
             className="transition-transform duration-300 ease-in-out hover:scale-105"
           >
             Kids
@@ -131,19 +131,19 @@ const Navbar = () => {
             Shop
           </Link>
           <Link
-            to="#"
+            to="/shop?target_audience=men"
             className="block transition-transform duration-300 ease-in-out hover:scale-105"
           >
-            Man
+            Men
           </Link>
           <Link
-            to="#"
+            to="/shop?target_audience=women"
             className="block transition-transform duration-300 ease-in-out hover:scale-105"
           >
-            Woman
+            Women
           </Link>
           <Link
-            to="#"
+            to="/shop?target_audience=kids"
             className="block transition-transform duration-300 ease-in-out hover:scale-105"
           >
             Kids

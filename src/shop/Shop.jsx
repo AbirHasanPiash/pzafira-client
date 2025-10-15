@@ -7,17 +7,11 @@ import {
   useCallback,
 } from "react";
 import useSWR from "swr";
-import api from "../api/axios";
 import { uniqBy } from "lodash";
 import ProductCard from "./ProductCard";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import Filter from "./Filter";
-
-// Fetcher for initial data
-const fetcher = async (url) => {
-  const res = await api.get(url);
-  return res.data;
-};
+import { useLocation } from "react-router-dom";
 
 const Shop = () => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -27,13 +21,26 @@ const Shop = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const shouldScrollRef = useRef(false);
 
-  const endpoint = pageUrl || `/products/api/detail-products/`;
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const targetAudience = queryParams.get("target_audience");
+
+  const baseEndpoint = "/products/api/detail-products/";
+  const endpoint =
+    pageUrl ||
+    (targetAudience
+      ? `${baseEndpoint}?target_audience=${targetAudience}`
+      : baseEndpoint);
 
   // Fetch once from API
-  const { data, error, isLoading } = useSWR(endpoint, fetcher, {
-    revalidateOnFocus: false,
-    dedupingInterval: 1000 * 60 * 5,
-  });
+  const { data, error, isLoading } = useSWR(endpoint);
+
+
+  useEffect(() => {
+    setFilters({});
+    setPageUrl(null);
+    shouldScrollRef.current = true;
+  }, [targetAudience]);
 
   // normalize incoming products
   const rawProducts = data?.results || [];

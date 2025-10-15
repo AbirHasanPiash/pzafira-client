@@ -9,6 +9,7 @@ const CreateProduct = () => {
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
   const [brand, setBrand] = useState("");
+  const [targetAudience, setTargetAudience] = useState("");
   const [isActive, setIsActive] = useState(true);
 
   const [categories, setCategories] = useState([]);
@@ -51,12 +52,16 @@ const CreateProduct = () => {
   useEffect(() => {
     fetchCategories();
     fetchBrands();
-  }, []);
+  }, [submitting]);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [id]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!name || !description || !category || !brand) {
+    if (!name || !description || !category || !brand || !targetAudience) {
       toast.error("All fields are required");
       return;
     }
@@ -66,8 +71,9 @@ const CreateProduct = () => {
     const payload = {
       name,
       description,
-      category,
-      brand,
+      category: categories.find((c) => c.id === parseInt(category))?.name,
+      brand: brands.find((b) => b.id === parseInt(brand))?.name,
+      target_audience: targetAudience,
       is_active: isActive,
     };
 
@@ -151,6 +157,22 @@ const CreateProduct = () => {
                   {br.name}
                 </option>
               ))}
+            </select>
+          </div>
+
+          {/* Target Audience Field */}
+          <div>
+            <label className="block mb-1 font-medium">Target Customer</label>
+            <select
+              className="w-full border border-gray-300 rounded px-3 py-2"
+              value={targetAudience}
+              onChange={(e) => setTargetAudience(e.target.value)}
+              required
+            >
+              <option value="">Select Target Customer</option>
+              <option value="men">Men</option>
+              <option value="women">Women</option>
+              <option value="kids">Kids</option>
             </select>
           </div>
 
