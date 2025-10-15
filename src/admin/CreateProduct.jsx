@@ -52,11 +52,11 @@ const CreateProduct = () => {
   useEffect(() => {
     fetchCategories();
     fetchBrands();
-  }, [submitting]);
+  }, []);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
-  }, [id]);
+  }, [productId]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
