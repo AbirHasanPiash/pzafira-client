@@ -54,9 +54,6 @@ const CreateProduct = () => {
     fetchBrands();
   }, []);
 
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }, [productId]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
