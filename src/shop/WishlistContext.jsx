@@ -1,4 +1,10 @@
-import { createContext, useContext, useReducer, useEffect, useCallback } from "react";
+import {
+  createContext,
+  useContext,
+  useReducer,
+  useEffect,
+  useCallback,
+} from "react";
 import api from "../api/axios";
 import AuthContext from "../auth/AuthProvider";
 
@@ -18,7 +24,7 @@ function wishlistReducer(state, action) {
     case "REMOVE_FROM_WISHLIST":
       return {
         ...state,
-        items: state.items.filter(item => item.id !== action.payload),
+        items: state.items.filter((item) => item.id !== action.payload),
       };
     case "CLEAR_WISHLIST":
       return { ...state, items: [] };
@@ -32,6 +38,13 @@ function wishlistReducer(state, action) {
 export const WishlistProvider = ({ children }) => {
   const [state, dispatch] = useReducer(wishlistReducer, initialState);
   const { user } = useContext(AuthContext);
+
+  useEffect(() => {
+    const saved = localStorage.getItem("wishlist");
+    if (saved) {
+      dispatch({ type: "SET_WISHLIST", payload: JSON.parse(saved) });
+    }
+  }, []);
 
   const fetchWishlist = useCallback(async () => {
     try {
@@ -64,10 +77,10 @@ export const WishlistProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    if (user) {
+    if (user?.id) {
       fetchWishlist();
     }
-  }, [user]);
+  }, [user?.id]);
 
   return (
     <WishlistContext.Provider
