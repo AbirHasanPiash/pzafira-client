@@ -85,6 +85,8 @@ const AddVariantModal = ({ productId, isOpen, onClose, variant }) => {
 
     setSubmitting(true);
 
+    console.log(data);
+
     try {
       if (isEdit) {
         await api.patch(

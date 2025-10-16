@@ -54,6 +54,9 @@ const CreateProduct = () => {
     fetchBrands();
   }, []);
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [productId])
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -77,6 +80,7 @@ const CreateProduct = () => {
     try {
       const res = await api.post("/products/api/products/", payload);
       setProductId(res.data.id);
+      console.log(productId);
       setProductCreated(true);
     } catch (err) {
       console.error(err);

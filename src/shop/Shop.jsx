@@ -79,7 +79,7 @@ const Shop = () => {
 
   const products = allProducts.length ? allProducts : cachedProducts;
 
-  // 🔹 Dynamic filter field setup
+  //  Dynamic filter field setup
   const filterOptions = useMemo(() => {
     if (!products || products.length === 0) return {};
 
