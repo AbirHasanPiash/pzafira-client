@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
+import useSWR from "swr";
 import useAuth from "../auth/useAuth";
 import { useCart } from "../shop/CartContext";
 import { useOrders } from "../shop/OrdersContext";
@@ -21,33 +22,24 @@ const Dashboard = () => {
   const { items: orderItems } = useOrders();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  // Load cached counts instantly on first render
-  useEffect(() => {
-  // Load saved counts instantly from sessionStorage
-  const savedCounts = sessionStorage.getItem("dashboard_counts");
-  if (savedCounts) {
-    setCounts(JSON.parse(savedCounts));
-  }
-}, []); // run once on mount
+  // ✅ Use SWR to keep things reactive and efficient
+  const { data: cartCount } = useSWR(
+    "cart",
+    () => cartItems.reduce((t, i) => t + i.quantity, 0),
+    { refreshInterval: 3000 }
+  );
 
-useEffect(() => {
-  if (user) {
-    const newCounts = {
-      cart: cartItems?.reduce((t, i) => t + i.quantity, 0) || 0,
-      wishlist: wishlistItems?.length || 0,
-      orders: orderItems?.length || 0,
-    };
+  const { data: wishlistCount } = useSWR(
+    "wishlist",
+    () => wishlistItems.length,
+    { refreshInterval: 5000 }
+  );
 
-    // Update state and persist to sessionStorage
-    setCounts(newCounts);
-    sessionStorage.setItem("dashboard_counts", JSON.stringify(newCounts));
-  } else {
-    const cleared = { cart: 0, wishlist: 0, orders: 0 };
-    setCounts(cleared);
-    sessionStorage.setItem("dashboard_counts", JSON.stringify(cleared));
-  }
-}, [user, cartItems, wishlistItems, orderItems]);
-
+  const { data: orderCount } = useSWR(
+    "orders",
+    () => orderItems.length,
+    { refreshInterval: 5000 }
+  );
 
   const navigation = [
     { name: "Cart", icon: ShoppingCartIcon, to: "/cart" },
@@ -57,6 +49,7 @@ useEffect(() => {
 
   return (
     <div className="bg-gray-50 min-h-screen">
+      {/* Wrapper aligned with navbar */}
       <div className="max-w-7xl mx-auto px-6 sm:px-10 md:px-16 py-10 flex flex-col lg:flex-row gap-8">
         {/* Mobile Sidebar */}
         {isSidebarOpen && (
@@ -118,6 +111,7 @@ useEffect(() => {
 
         {/* Main Content */}
         <main className="flex-1">
+          {/* Mobile Top Bar */}
           <div className="flex justify-between items-center lg:hidden mb-6">
             <h1 className="text-2xl font-bold text-gray-800">Dashboard</h1>
             <Bars3Icon
@@ -126,10 +120,10 @@ useEffect(() => {
             />
           </div>
 
+          {/* Main Card */}
           <div className="bg-white rounded-2xl shadow p-8">
             <h1 className="text-2xl font-bold text-gray-800">
-              Welcome,{" "}
-              <span className="text-indigo-600">{user?.first_name}</span> 👋
+              Welcome, <span className="text-indigo-600">{user?.first_name}</span> 👋
             </h1>
             <p className="text-gray-500 mt-1">
               Here’s your personalized dashboard overview.
@@ -146,7 +140,7 @@ useEffect(() => {
                     Cart Items
                   </p>
                   <p className="text-3xl font-bold text-indigo-700">
-                    {counts.cart}
+                    {cartCount ?? 0}
                   </p>
                 </div>
               </div>
@@ -158,7 +152,7 @@ useEffect(() => {
                 <div>
                   <p className="text-sm font-medium text-gray-600">Wishlist</p>
                   <p className="text-3xl font-bold text-pink-700">
-                    {counts.wishlist}
+                    {wishlistCount ?? 0}
                   </p>
                 </div>
               </div>
@@ -170,7 +164,7 @@ useEffect(() => {
                 <div>
                   <p className="text-sm font-medium text-gray-600">Orders</p>
                   <p className="text-3xl font-bold text-green-700">
-                    {counts.orders}
+                    {orderCount ?? 0}
                   </p>
                 </div>
               </div>
