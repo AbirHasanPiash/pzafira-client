@@ -48,8 +48,9 @@ const Category = () => {
     setSubmitLoading(true);
     try {
       if (editingCategory) {
-        await api.put(`/products/api/categories/${editingCategory.id}/`, form);
-        toast.success("Category updated");
+        toast.info("Demo mode: This action is disabled.");
+        // await api.put(`/products/api/categories/${editingCategory.id}/`, form);
+        // toast.success("Category updated");
       } else {
         await api.post("/products/api/categories/", form);
         toast.success("Category created");

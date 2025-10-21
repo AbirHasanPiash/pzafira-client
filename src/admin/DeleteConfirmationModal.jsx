@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 const DeleteConfirmationModal = ({ isOpen, onClose, onConfirm, itemName = "item" }) => {
   const [isDeleting, setIsDeleting] = useState(false);
@@ -6,9 +7,13 @@ const DeleteConfirmationModal = ({ isOpen, onClose, onConfirm, itemName = "item"
   if (!isOpen) return null;
 
   const handleDelete = async () => {
-    setIsDeleting(true);
-    await onConfirm(); // Run the parent deletion logic
-    setIsDeleting(false);
+    toast.info("Demo mode: This action is disabled.");
+    onClose();
+    return;
+
+    // setIsDeleting(true);
+    // await onConfirm(); // Run the parent deletion logic
+    // setIsDeleting(false);
   };
 
   return (

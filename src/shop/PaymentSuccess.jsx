@@ -1,4 +1,5 @@
 import { FaCheckCircle } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const PaymentSuccess = () => {
   return (
@@ -9,12 +10,13 @@ const PaymentSuccess = () => {
         <p className="text-sm md:text-base text-gray-600 mb-4">
           Thank you for your order! We're now processing it.
         </p>
-        <a
-          href="/dashboard"
+        <Link
+          name="dashboard-btn"
+          to="/dashboard"
           className="inline-block w-full md:w-auto px-6 py-2 bg-green-600 text-white rounded-full hover:bg-green-700 transition text-sm md:text-base"
         >
           Go to Dashboard
-        </a>
+        </Link>
       </div>
     </div>
   );

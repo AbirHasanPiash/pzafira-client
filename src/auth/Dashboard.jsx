@@ -14,6 +14,7 @@ import {
   XMarkIcon,
   UserCircleIcon,
 } from "@heroicons/react/24/outline";
+import UserProfile from "../user/UserProfile";
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -85,14 +86,12 @@ const Dashboard = () => {
         )}
 
         {/* Desktop Sidebar */}
-        <aside className="hidden lg:flex flex-col w-64 bg-white shadow-md rounded-xl p-6 h-fit">
+        <aside className="hidden lg:flex flex-col w-64 bg-white shadow-md rounded-xl p-6">
           <div className="flex items-center gap-3 mb-6">
-            <UserCircleIcon className="w-8 h-8 text-indigo-600" />
             <div>
-              <h2 className="text-lg font-semibold text-gray-800">
-                {user?.first_name ?? "User"}
+              <h2 className="text-lg sm:text-xl md:text-2xl font-semibold text-gray-800">
+                Dashboard
               </h2>
-              <p className="text-sm text-gray-500">My Account</p>
             </div>
           </div>
           <nav className="space-y-2">
@@ -121,6 +120,7 @@ const Dashboard = () => {
           </div>
 
           {/* Main Card */}
+          <UserProfile />
           <div className="bg-white rounded-2xl shadow p-8">
             <h1 className="text-2xl font-bold text-gray-800">
               Welcome, <span className="text-indigo-600">{user?.first_name}</span> 👋
@@ -170,6 +170,7 @@ const Dashboard = () => {
               </div>
             </div>
           </div>
+          
         </main>
       </div>
     </div>

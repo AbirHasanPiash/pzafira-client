@@ -78,10 +78,12 @@ const UserProfile = () => {
     }
 
     try {
-      const res = await api.patch("/auth/profile/", data);
-      mutate(res.data, false); // Optimistic update
-      setIsUpdateOpen(false);
-      toast.success("Profile updated successfully!");
+      toast.info("Demo mode: This action is disabled.");
+      return;
+      // const res = await api.patch("/auth/profile/", data);
+      // mutate(res.data, false); // Optimistic update
+      // setIsUpdateOpen(false);
+      // toast.success("Profile updated successfully!");
     } catch {
       toast.error("Profile update failed.");
     }
@@ -90,10 +92,12 @@ const UserProfile = () => {
   // ✅ Delete Account
   const handleDeleteAccount = async () => {
     try {
-      await api.delete("/auth/profile/");
-      toast.success("Account deleted.");
-      logout();
-      navigate("/");
+      toast.info("Demo mode: This action is disabled.");
+      return;
+      // await api.delete("/auth/profile/");
+      // toast.success("Account deleted.");
+      // logout();
+      // navigate("/");
     } catch {
       toast.error("Account deletion failed.");
     } finally {
@@ -105,7 +109,7 @@ const UserProfile = () => {
   const handleChangePassword = () => navigate("/change-password");
 
   return (
-    <div className="max-w-7xl mx-auto min-h-screen px-6 md:px-10 py-10">
+    <div className="pb-10">
       {/* Profile Card */}
       <div className="bg-white rounded-2xl shadow-md p-8 flex flex-col md:flex-row items-center gap-8 transition-all">
         {/* Profile Image */}
@@ -155,9 +159,7 @@ const UserProfile = () => {
             </button>
           </div>
         </div>
-      </div>
-
-      {/* Manage Addresses Button */}
+        {/* Manage Addresses Button */}
       <div className="mt-8 flex justify-center md:justify-start">
         <Link
           to="/manage-addresses"
@@ -167,6 +169,8 @@ const UserProfile = () => {
           Manage Addresses
         </Link>
       </div>
+      </div>
+
 
       {/* Update Modal */}
       <Dialog open={isUpdateOpen} onClose={() => setIsUpdateOpen(false)}>

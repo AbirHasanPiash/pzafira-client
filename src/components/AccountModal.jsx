@@ -21,11 +21,13 @@ const AccountModal = ({ closeModal }) => {
       <div className="flex flex-col gap-2 text-sm font-medium">
         {user ? (
           <>
-            <div>
-              <p className="hover:bg-gray-100 px-3 py-2 rounded transition">
-                {user.first_name} {user.last_name}
-              </p>
-            </div>
+            <Link
+              to={user.is_staff ? "/admin" : "/dashboard"}
+              onClick={handleLinkClick}
+              className="hover:bg-gray-100 px-3 py-2 rounded transition"
+            >
+              {user.first_name} {user.last_name}
+            </Link>
             <Link
               to={user.is_staff ? "/admin" : "/dashboard"}
               onClick={handleLinkClick}
@@ -33,13 +35,13 @@ const AccountModal = ({ closeModal }) => {
             >
               Dashboard
             </Link>
-            <Link
+            {/* <Link
               to="/profile"
               onClick={handleLinkClick}
               className="hover:bg-gray-100 px-3 py-2 rounded transition"
             >
               Profile
-            </Link>
+            </Link> */}
             <button
               onClick={handleLogout}
               className="text-left hover:bg-gray-100 px-3 py-2 rounded transition"

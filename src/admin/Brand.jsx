@@ -52,10 +52,11 @@ const Brand = () => {
 
     try {
       if (editingBrand) {
-        await api.put(`/products/api/brands/${editingBrand.id}/`, formData, {
-          headers: { "Content-Type": "multipart/form-data" },
-        });
-        toast.success("Brand updated");
+        toast.info("Demo mode: This action is disabled.");
+        // await api.put(`/products/api/brands/${editingBrand.id}/`, formData, {
+        //   headers: { "Content-Type": "multipart/form-data" },
+        // });
+        // toast.success("Brand updated");
       } else {
         await api.post("/products/api/brands/", formData, {
           headers: { "Content-Type": "multipart/form-data" },

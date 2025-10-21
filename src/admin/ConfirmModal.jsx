@@ -1,4 +1,5 @@
 import { X } from "lucide-react";
+import { toast } from "react-toastify";
 
 const ConfirmModal = ({
   show,
@@ -11,6 +12,18 @@ const ConfirmModal = ({
   confirmClass = "bg-red-600 hover:bg-red-700 text-white",
 }) => {
   if (!show) return null;
+
+  const handleConfirm = async () => {
+    // Protection Mode (demo only)
+    toast.info("Demo mode: This action is disabled.");
+    onClose();
+    return;
+
+    // Actual action
+    
+    // await onConfirm();
+    
+  };
 
   return (
     <div className="fixed inset-0 backdrop-blur-sm bg-black/30 z-50 flex items-center justify-center">
@@ -28,7 +41,7 @@ const ConfirmModal = ({
             {cancelText}
           </button>
           <button
-            onClick={onConfirm}
+            onClick={handleConfirm}
             className={`px-4 py-2 rounded ${confirmClass}`}
           >
             {confirmText}

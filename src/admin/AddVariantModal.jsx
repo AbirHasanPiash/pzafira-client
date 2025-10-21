@@ -85,15 +85,14 @@ const AddVariantModal = ({ productId, isOpen, onClose, variant }) => {
 
     setSubmitting(true);
 
-    console.log(data);
-
     try {
       if (isEdit) {
-        await api.patch(
-          `/products/api/detail-products/${productId}/variants/${variant.id}/`,
-          data
-        );
-        toast.success("Variant updated successfully!");
+        toast.info("Demo mode: This action is disabled.");
+        // await api.patch(
+        //   `/products/api/detail-products/${productId}/variants/${variant.id}/`,
+        //   data
+        // );
+        // toast.success("Variant updated successfully!");
       } else {
         await api.post(
           `/products/api/detail-products/${productId}/variants/`,

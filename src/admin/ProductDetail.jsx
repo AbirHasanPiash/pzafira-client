@@ -16,7 +16,6 @@ const fetcher = async (url) => {
 const ProductDetail = () => {
   const { id } = useParams();
 
-  // Auto-scroll to top when component loads or product ID changes
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [id]);
@@ -30,6 +29,29 @@ const ProductDetail = () => {
     }
   );
 
+  //  New: State for brands
+  const [brands, setBrands] = useState([]);
+
+  //  Fetch brand list
+  const fetchBrands = async () => {
+    const cachedBrands = localStorage.getItem("brands");
+    if (cachedBrands) {
+      setBrands(JSON.parse(cachedBrands));
+    }
+    try {
+      const res = await api.get("/products/api/brands/");
+      setBrands(res.data.results);
+      localStorage.setItem("brands", JSON.stringify(res.data.results));
+    } catch (err) {
+      toast.error("Failed to fetch brands");
+    }
+  };
+
+  //  Fetch brands on mount
+  useEffect(() => {
+    fetchBrands();
+  }, []);
+
   const [isVariantModalOpen, setVariantModalOpen] = useState(false);
   const [isImageModalOpen, setImageModalOpen] = useState(false);
   const [editingVariant, setEditingVariant] = useState(null);
@@ -37,7 +59,6 @@ const ProductDetail = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [editData, setEditData] = useState(null);
 
-  // Initialize editable data when edit starts
   const handleStartEdit = () => {
     setEditData({
       name: product.name,
@@ -50,53 +71,24 @@ const ProductDetail = () => {
     setIsEditing(true);
   };
 
-  // Cancel editing
   const handleCancelEdit = () => {
     setIsEditing(false);
     setEditData(null);
   };
 
-  console.log("Updating product with data:", editData);
-
-
-  // Submit updated basic info
   const handleSaveEdit = async () => {
     try {
-      await api.put(`/products/api/products/${id}/`, editData);
-      toast.success("Product info updated successfully!");
-      setIsEditing(false);
-      mutate(); // Refresh product info
+      toast.info("Demo mode: This action is disabled.");
+      // await api.put(`/products/api/products/${id}/`, editData);
+      // toast.success("Product info updated successfully!");
+      // setIsEditing(false);
+      // mutate();
     } catch (err) {
       console.error(err);
       toast.error("Failed to update product info.");
     }
   };
 
-  // Delete variant
-  const handleDeleteVariant = async (variantId) => {
-    try {
-      await api.delete(
-        `/products/api/detail-products/${id}/variants/${variantId}/`
-      );
-      toast.success("Variant deleted successfully");
-      mutate();
-    } catch (err) {
-      toast.error("Failed to delete variant");
-    }
-  };
-
-  // Delete image
-  const handleDeleteImage = async (imageId) => {
-    try {
-      await api.delete(`/products/api/detail-products/${id}/images/${imageId}/`);
-      toast.success("Image deleted successfully");
-      mutate();
-    } catch (err) {
-      toast.error("Failed to delete image");
-    }
-  };
-
-  // Delete product
   const handleDeleteProduct = async () => {
     try {
       await api.delete(`/products/api/detail-products/${id}/`);
@@ -202,15 +194,21 @@ const ProductDetail = () => {
               <option value="kids">Kids</option>
             </select>
 
-            <input
-              type="text"
-              className="border p-2 rounded text-sm w-full"
-              placeholder="Brand"
+            {/* 🔹 Updated Brand Field — Dropdown using fetched brands */}
+            <select
+              className="border p-2 rounded text-sm"
               value={editData.brand}
               onChange={(e) =>
                 setEditData({ ...editData, brand: e.target.value })
               }
-            />
+            >
+              <option value="">Select Brand</option>
+              {brands.map((b) => (
+                <option key={b.id} value={b.name}>
+                  {b.name}
+                </option>
+              ))}
+            </select>
 
             <input
               type="text"
@@ -352,6 +350,7 @@ const ProductDetail = () => {
         }}
       />
 
+      {/* ...rest of your component remains unchanged */}
       <DeleteConfirmationModal
         isOpen={isDeleteModalOpen}
         onClose={() => setDeleteModalOpen(false)}

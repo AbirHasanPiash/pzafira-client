@@ -48,8 +48,9 @@ const Color = () => {
     setSubmitLoading(true);
     try {
       if (editingColor) {
-        await api.put(`/products/api/colors/${editingColor.id}/`, form);
-        toast.success("Color updated");
+        toast.info("Demo mode: This action is disabled.");
+        // await api.put(`/products/api/colors/${editingColor.id}/`, form);
+        // toast.success("Color updated");
       } else {
         await api.post("/products/api/colors/", form);
         toast.success("Color created");

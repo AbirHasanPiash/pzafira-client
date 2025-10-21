@@ -48,8 +48,9 @@ const Size = () => {
     setSubmitLoading(true);
     try {
       if (editingSize) {
-        await api.put(`/products/api/sizes/${editingSize.id}/`, form);
-        toast.success("Size updated");
+        toast.info("Demo mode: This action is disabled.");
+        // await api.put(`/products/api/sizes/${editingSize.id}/`, form);
+        // toast.success("Size updated");
       } else {
         await api.post("/products/api/sizes/", form);
         toast.success("Size created");
