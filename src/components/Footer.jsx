@@ -7,6 +7,7 @@ import {
   Phone,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import BrandLogo from "./BrandLogo";
 
 const Footer = () => {
   return (
@@ -16,8 +17,8 @@ const Footer = () => {
           {/* Brand */}
 
           <div>
-            <div className="flex items-center gap-2 mb-4">
-              <span className="text-2xl font-bold text-white">Pzafira</span>
+            <div>
+              <BrandLogo />
             </div>
             <p className="text-gray-400 text-sm">
               Bringing you the best fashion collections for every season and
