@@ -23,7 +23,7 @@ const Shop = () => {
 
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  const targetAudience = queryParams.get("target_audience");
+  const targetAudience = queryParams.get("target_customer");
 
   const baseEndpoint = "/products/api/detail-products/";
   const endpoint =
