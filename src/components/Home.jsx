@@ -22,7 +22,7 @@ const Home = () => {
       <Carousel />
       <Features />
       <TrendingNow />
-      <OfferSection endDate="2026-05-31T23:59:59" />
+      <OfferSection endDate="2026-11-31T23:59:59" />
       <NewsletterForm />
     </>
   );
