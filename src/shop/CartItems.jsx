@@ -91,7 +91,9 @@ const CartItems = () => {
                 {/* Image */}
                 <div className="w-32 h-32 flex-shrink-0">
                   <img
-                    src={item.image || "/images/default_img.png"}
+                    loading="lazy"
+                    decoding="async"
+                    src={item.image || "/images/default_img.webp"}
                     alt={item.variant?.product || "Product"}
                     className="w-full h-full object-cover rounded-md"
                   />
@@ -192,7 +194,7 @@ const CartItems = () => {
                 .toFixed(2)}
             </h2>
             <Link
-              to="/addreses"
+              to="/addresses"
               className="mt-4 md:mt-0 text-sm bg-black text-white px-8 py-3 rounded-md hover:bg-gray-800 transition"
             >
               Proceed to Checkout

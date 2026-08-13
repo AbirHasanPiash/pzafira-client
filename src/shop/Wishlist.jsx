@@ -86,7 +86,9 @@ const Wishlist = () => {
               className="relative overflow-hidden"
             >
               <img
-                src={item.image || "/images/default_img.png"}
+                loading="lazy"
+                decoding="async"
+                src={item.image || "/images/default_img.webp"}
                 alt={item.variant?.product}
                 className="w-full max-h-48 object-contain bg-gray-50 p-3 transition-transform duration-300 hover:scale-105"
               />

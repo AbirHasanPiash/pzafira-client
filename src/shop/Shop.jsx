@@ -1,5 +1,6 @@
 import {
   useState,
+  useDeferredValue,
   useEffect,
   useLayoutEffect,
   useRef,
@@ -7,11 +8,21 @@ import {
   useCallback,
 } from "react";
 import useSWR from "swr";
-import { uniqBy } from "lodash";
 import ProductCard from "./ProductCard";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import Filter from "./Filter";
 import { useLocation } from "react-router-dom";
+import { ProductGridSkeleton } from "../components/Skeletons";
+
+/** Keeps the first occurrence of each id, preserving server order. */
+const dedupeById = (items) => {
+  const seen = new Set();
+  return items.filter((item) => {
+    if (!item || seen.has(item.id)) return false;
+    seen.add(item.id);
+    return true;
+  });
+};
 
 const Shop = () => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -19,6 +30,9 @@ const Shop = () => {
   const [filters, setFilters] = useState({});
   const [pageUrl, setPageUrl] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+  // Keeps the input responsive: typing paints immediately and the (heavier)
+  // grid re-filter runs at a lower priority.
+  const deferredSearch = useDeferredValue(searchTerm);
   const shouldScrollRef = useRef(false);
 
   const location = useLocation();
@@ -42,42 +56,16 @@ const Shop = () => {
     shouldScrollRef.current = true;
   }, [targetAudience]);
 
-  // normalize incoming products
-  const rawProducts = data?.results || [];
-  const allProducts = uniqBy(rawProducts, "id");
+  /**
+   * Memoised so the reference is stable between renders. It previously produced
+   * a new array every pass, which re-ran every downstream effect and memo on
+   * each render — including a full JSON serialisation of the catalogue into
+   * localStorage. Cross-session caching is now handled by the SWR provider.
+   */
+  const products = useMemo(() => dedupeById(data?.results || []), [data]);
 
   const nextPageUrl = data?.next || null;
   const prevPageUrl = data?.previous || null;
-
-  // 🔹 Save state (cache products)
-  useEffect(() => {
-    if (data) {
-      localStorage.setItem(
-        "cachedProducts",
-        JSON.stringify({
-          timestamp: Date.now(),
-          data: allProducts,
-        })
-      );
-    }
-  }, [data, allProducts]);
-
-  // 🔹 Restore cache
-  const [cachedProducts, setCachedProducts] = useState([]);
-  useEffect(() => {
-    const cached = localStorage.getItem("cachedProducts");
-    if (cached) {
-      try {
-        const parsed = JSON.parse(cached);
-        setCachedProducts(parsed.data || []);
-      } catch (err) {
-        // ignore invalid cache
-        setCachedProducts([]);
-      }
-    }
-  }, []);
-
-  const products = allProducts.length ? allProducts : cachedProducts;
 
   //  Dynamic filter field setup
   const filterOptions = useMemo(() => {
@@ -165,8 +153,8 @@ const Shop = () => {
     }
 
     // Search
-    if (searchTerm) {
-      const s = searchTerm.toLowerCase();
+    if (deferredSearch) {
+      const s = deferredSearch.toLowerCase();
       filtered = filtered.filter((p) => {
         const name = (p.name ?? "").toString().toLowerCase();
         const desc = (p.description ?? "").toString().toLowerCase();
@@ -175,7 +163,7 @@ const Shop = () => {
     }
 
     return filtered;
-  }, [products, filters, searchTerm]);
+  }, [products, filters, deferredSearch]);
 
   // 🔹 Smooth scroll
   useLayoutEffect(() => {
@@ -261,9 +249,7 @@ const Shop = () => {
         {/* Product Grid */}
         <section className="flex-1">
           {isLoading ? (
-            <div className="min-h-screen flex justify-center items-center">
-              <div className="spinner"></div>
-            </div>
+            <ProductGridSkeleton />
           ) : error ? (
             <div className="text-center text-red-500">
               Failed to load products.

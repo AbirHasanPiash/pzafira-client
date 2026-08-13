@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import useAuth from "../auth/useAuth";
 import api from "../api/axios";
@@ -7,7 +7,6 @@ import "react-toastify/dist/ReactToastify.css";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useWishlist } from "../shop/WishlistContext";
 import { useCart } from "../shop/CartContext";
-import AuthContext from "./AuthProvider";
 
 const Login = () => {
   const { refreshWishlist } = useWishlist();
@@ -18,7 +17,6 @@ const Login = () => {
   const [showReset, setShowReset] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const { fetchCart: refreshCart } = useCart();
-  const { user } = useContext(AuthContext);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -176,7 +174,7 @@ const Login = () => {
               Forgot your password?
             </button>
             <div className="flex flex-col sm:flex-row sm:items-center gap-1">
-              <span>Don't have an account?</span>
+              <span>Don&apos;t have an account?</span>
               <Link to="/register" className="text-blue-600 hover:underline">
                 Register here
               </Link>

@@ -10,7 +10,6 @@ const ProductReviews = ({ reviews, productId, onReviewChange }) => {
   const [editMode, setEditMode] = useState(false);
   const [updatedComment, setUpdatedComment] = useState("");
   const [updatedRating, setUpdatedRating] = useState(0);
-  const [orders, setOrders] = useState([]);
   const [hasPurchased, setHasPurchased] = useState(false);
 
   const userReview = reviews.find((r) => r.user_id === user?.id);
@@ -23,8 +22,6 @@ const ProductReviews = ({ reviews, productId, onReviewChange }) => {
     const fetchOrders = async () => {
       try {
         const res = await api.get("/orders/api/orders/");
-        setOrders(res.data.results);
-
         // Check if user bought this product
         const purchased = res.data.results.some((order) =>
           order.items.some((item) => item.variant.product_id === productId)

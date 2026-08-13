@@ -51,7 +51,9 @@ const Careers = () => {
         {/* Why Work With Us */}
         <div className="grid md:grid-cols-2 gap-10 items-center">
           <img
-            src="images/office.jpeg"
+            loading="lazy"
+            decoding="async"
+            src="/images/office.webp"
             alt="Our Culture"
             className="rounded-md shadow-lg w-full object-cover h-full"
           />
@@ -60,7 +62,7 @@ const Careers = () => {
               Why Work With Us?
             </h2>
             <p className="text-gray-600 text-sm sm:text-base leading-relaxed">
-              At StyleNest, we blend creativity, innovation, and inclusivity to empower our team and customers. You'll work in a culture that values fresh ideas, flexible work-life balance, and real growth opportunities.
+              At Pzafira, we blend creativity, innovation, and inclusivity to empower our team and customers. You&apos;ll work in a culture that values fresh ideas, flexible work-life balance, and real growth opportunities.
             </p>
             <ul className="list-disc list-inside text-sm text-gray-600 pt-2">
               <li>Remote flexibility & hybrid roles</li>

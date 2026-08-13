@@ -148,8 +148,12 @@ const ProductDetails = () => {
         {/* Image Section */}
         <div className="w-full">
           <div className="relative w-full">
+            {/* The main product shot is this page's largest paint — load it eagerly. */}
             <img
-              src={product.images[currentImageIndex]?.image}
+              loading="eager"
+              fetchPriority="high"
+              decoding="async"
+              src={product.images?.[currentImageIndex]?.image || "/images/default_img.webp"}
               alt={product.name}
               className="rounded-lg shadow-md w-full h-[400px] object-contain bg-white"
             />

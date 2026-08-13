@@ -87,6 +87,8 @@ const ImageUploadModal = ({ isOpen, onClose, productId }) => {
             {previewUrls.map((url, index) => (
               <div key={index} className="flex flex-col items-center w-24">
                 <img
+                  loading="lazy"
+                  decoding="async"
                   src={url}
                   alt={`Preview ${index}`}
                   className="w-24 h-24 object-cover rounded border"

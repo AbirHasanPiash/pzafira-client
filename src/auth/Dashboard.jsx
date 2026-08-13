@@ -1,6 +1,5 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import useSWR from "swr";
 import useAuth from "../auth/useAuth";
 import { useCart } from "../shop/CartContext";
 import { useOrders } from "../shop/OrdersContext";
@@ -12,7 +11,6 @@ import {
   ClipboardDocumentListIcon,
   Bars3Icon,
   XMarkIcon,
-  UserCircleIcon,
 } from "@heroicons/react/24/outline";
 import UserProfile from "../user/UserProfile";
 
@@ -23,24 +21,18 @@ const Dashboard = () => {
   const { items: orderItems } = useOrders();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  // ✅ Use SWR to keep things reactive and efficient
-  const { data: cartCount } = useSWR(
-    "cart",
-    () => cartItems.reduce((t, i) => t + i.quantity, 0),
-    { refreshInterval: 3000 }
+  /**
+   * These are derived from context that already updates on change, so they are
+   * computed rather than polled. They were previously three SWR subscriptions
+   * on 3–5s timers, which re-rendered the dashboard continuously and showed
+   * counts up to five seconds behind the cart badge in the navbar.
+   */
+  const cartCount = useMemo(
+    () => cartItems.reduce((total, item) => total + item.quantity, 0),
+    [cartItems]
   );
-
-  const { data: wishlistCount } = useSWR(
-    "wishlist",
-    () => wishlistItems.length,
-    { refreshInterval: 5000 }
-  );
-
-  const { data: orderCount } = useSWR(
-    "orders",
-    () => orderItems.length,
-    { refreshInterval: 5000 }
-  );
+  const wishlistCount = wishlistItems.length;
+  const orderCount = orderItems.length;
 
   const navigation = [
     { name: "Cart", icon: ShoppingCartIcon, to: "/cart" },

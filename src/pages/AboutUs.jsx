@@ -28,7 +28,9 @@ const AboutUs = () => {
         {/* Mission Section */}
         <div className="grid md:grid-cols-2 gap-10 items-center">
           <img
-            src="images/our_story.jpeg"
+            loading="lazy"
+            decoding="async"
+            src="/images/our_story.webp"
             alt="Our Mission"
             className="rounded-md shadow-lg w-full object-cover h-full"
           />
@@ -60,6 +62,8 @@ const AboutUs = () => {
                 className="bg-white p-6 rounded-md shadow hover:shadow-lg transition duration-300 text-center"
               >
                 <img
+                  loading="lazy"
+                  decoding="async"
                   src={member.img}
                   alt={member.name}
                   className="w-24 h-24 mx-auto rounded-full mb-4 object-cover border-2 border-gray-200"

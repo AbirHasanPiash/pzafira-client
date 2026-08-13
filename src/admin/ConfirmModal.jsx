@@ -4,6 +4,9 @@ import { toast } from "react-toastify";
 const ConfirmModal = ({
   show,
   onClose,
+  // Unused while demo protection is on; wired back up when the real
+  // request below is uncommented.
+  // eslint-disable-next-line no-unused-vars
   onConfirm,
   title = "Are you sure?",
   message = "This action cannot be undone.",

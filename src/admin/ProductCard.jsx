@@ -1,14 +1,21 @@
 import { Link } from "react-router-dom";
 
 export default function ProductCard({ product }) {
-  const primaryImage = product.images.find(img => img.is_primary)?.image || "/images/default_img.png";
+  // Optional chaining: a product with no images array would otherwise throw.
+  const primaryImage =
+    product.images?.find((img) => img.is_primary)?.image ||
+    product.images?.[0]?.image ||
+    "/images/default_img.webp";
   return (
     <div className="bg-white shadow-md rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300">
       <img
         src={primaryImage}
         alt={product.name}
-        className="w-full h-60 object-cover"
+        width="300"
+        height="240"
         loading="lazy"
+        decoding="async"
+        className="w-full h-60 object-cover"
       />
       <div className="p-2 flex flex-col justify-between h-[160px]">
         <div>

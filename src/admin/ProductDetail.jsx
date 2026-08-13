@@ -89,6 +89,38 @@ const ProductDetail = () => {
     }
   };
 
+  /**
+   * Both handlers were dropped when demo protection was added, but their
+   * buttons still called them — clicking a variant or image trash icon threw a
+   * ReferenceError and unmounted the admin page. They are restored here gated
+   * the same way as handleSaveEdit: uncomment the request to go live.
+   */
+  // eslint-disable-next-line no-unused-vars
+  const handleDeleteVariant = async (variantId) => {
+    try {
+      toast.info("Demo mode: This action is disabled.");
+      // await api.delete(`/products/api/detail-products/${id}/variants/${variantId}/`);
+      // toast.success("Variant deleted successfully");
+      // mutate();
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to delete variant");
+    }
+  };
+
+  // eslint-disable-next-line no-unused-vars
+  const handleDeleteImage = async (imageId) => {
+    try {
+      toast.info("Demo mode: This action is disabled.");
+      // await api.delete(`/products/api/detail-products/${id}/images/${imageId}/`);
+      // toast.success("Image deleted successfully");
+      // mutate();
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to delete image");
+    }
+  };
+
   const handleDeleteProduct = async () => {
     try {
       await api.delete(`/products/api/detail-products/${id}/`);
@@ -242,6 +274,8 @@ const ProductDetail = () => {
             className="relative group overflow-hidden rounded-lg shadow-md"
           >
             <img
+              loading="lazy"
+              decoding="async"
               src={img.image}
               alt="Product"
               className="w-full aspect-[3/4] object-cover transition-transform duration-300 group-hover:scale-105"

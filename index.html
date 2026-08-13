@@ -4,7 +4,23 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/z_logo.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Pzafira</title>
+    <meta name="theme-color" content="#ffffff" />
+    <meta
+      name="description"
+      content="Pzafira — elegant sharees, panjabis and fusion wear. Shop the latest collections with fast delivery across Bangladesh."
+    />
+
+    <!--
+      Open the connection to the API while the bundle is still downloading, so
+      the first data request does not pay for DNS, TCP and TLS.
+    -->
+    <link rel="preconnect" href="https://pzafira-cloth-store.vercel.app" crossorigin />
+    <link rel="dns-prefetch" href="https://pzafira-cloth-store.vercel.app" />
+
+    <!-- Largest paint on the landing page: start it before the JS parses. -->
+    <link rel="preload" as="image" href="/images/hero-bg.webp" fetchpriority="high" />
+
+    <title>Pzafira — Modern Clothing Store</title>
   </head>
   <body>
     <div id="root"></div>

@@ -1,30 +1,33 @@
-import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 
+/**
+ * Above-the-fold, so it is deliberately dependency-free: the entrance
+ * animation is plain CSS rather than Framer Motion, which keeps the animation
+ * library off the critical path and out of the first paint.
+ */
 const Hero = () => {
   return (
     <section className="relative overflow-hidden h-full">
-      {/* Background image for desktop */}
+      {/* Background image */}
       <div className="absolute inset-0 block z-0">
         <img
-          src="images/hero-bg.jpeg"
-          alt="Desktop Background"
+          src="/images/hero-bg.webp"
+          alt=""
+          aria-hidden="true"
+          width="1536"
+          height="1024"
+          fetchPriority="high"
+          decoding="async"
           className="h-full w-full object-cover"
         />
       </div>
 
-      {/* Optional overlay */}
+      {/* Overlay */}
       <div className="absolute inset-0 bg-black/30 z-0" />
 
       {/* Content */}
       <div className="relative z-10 container max-w-7xl mx-auto px-6 sm:px-10 md:px-16 py-20 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center min-h-screen">
-        {/* Text Content */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="text-center lg:text-left space-y-6 text-white"
-        >
+        <div className="animate-rise text-center lg:text-left space-y-6 text-white">
           <h1 className="text-4xl md:text-5xl font-extrabold leading-tight">
             Unleash Your Style<br /> With Confidence
           </h1>
@@ -45,9 +48,9 @@ const Hero = () => {
               Learn More
             </Link>
           </div>
-        </motion.div>
+        </div>
 
-        {/* Empty column or use it for balance on desktop */}
+        {/* Balance column on desktop */}
         <div className="hidden lg:block" />
       </div>
     </section>

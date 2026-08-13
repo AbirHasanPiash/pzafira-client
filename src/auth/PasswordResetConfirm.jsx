@@ -4,7 +4,6 @@ import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import api from "../api/axios";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import AnimatedButton from "../components/AnimatedButton";
 
 const PasswordResetConfirm = () => {
   const { uid, token } = useParams();

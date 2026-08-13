@@ -200,3 +200,39 @@
 .animate-slide-out-right {
   animation: slide-out-right 0.4s ease forwards;
 }
+
+/* Hero entrance. Kept in CSS so the landing page needs no animation library. */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-rise {
+  animation: rise 0.8s ease-out both;
+}
+
+/* Reserves layout for a section that is still streaming in. */
+.section-placeholder {
+  min-height: 60vh;
+}
+
+/*
+ * Respect the OS "reduce motion" setting: decorative animation is dropped
+ * while the content itself stays visible.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

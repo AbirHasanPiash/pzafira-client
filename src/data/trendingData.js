@@ -1,15 +1,15 @@
 const trendingData = [
     {
       title: "Elegant Sharees",
-      image: "/images/trending_sharee.jpeg",
+      image: "/images/trending_sharee.webp",
     },
     {
       title: "Stylish Panjabis",
-      image: "/images/trending_panjabis.jpeg",
+      image: "/images/trending_panjabis.webp",
     },
     {
       title: "Fusion Outfits",
-      image: "/images/trending_fusion.jpeg",
+      image: "/images/trending_fusion.webp",
     },
   ];
   

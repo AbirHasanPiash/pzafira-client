@@ -1,11 +1,14 @@
-import { useEffect, useState, useCallback, useLayoutEffect, useMemo } from "react";
-import useSWR, { mutate } from "swr";
+import { useEffect, useState, useDeferredValue, useLayoutEffect, useMemo } from "react";
+import useSWR, { preload } from "swr";
 import ProductCard from "./ProductCard";
-import debounce from "lodash/debounce";
+import fetcher from "../api/fetcher";
 import { NavLink } from "react-router-dom";
 
 export default function ProductList() {
   const [searchTerm, setSearchTerm] = useState("");
+  // Replaces a lodash debounce: the input stays responsive while the filter
+  // runs at a lower priority, with no timer to leak or go stale.
+  const deferredSearch = useDeferredValue(searchTerm);
   const [currentPage, setCurrentPage] = useState(1);
   const [shouldScroll, setShouldScroll] = useState(false);
 
@@ -22,18 +25,15 @@ export default function ProductList() {
   // === Prefetch next page if exists ===
   useEffect(() => {
     if (data && currentPage < totalPages) {
-      const nextPageUrl = `/products/api/detail-products/?page=${currentPage + 1}`;
-      mutate(
-        nextPageUrl,
-        async (prev) => {
-          // Only fetch if not already cached
-          if (!prev) {
-            const res = await fetch(nextPageUrl);
-            return res.json();
-          }
-          return prev;
-        },
-        { revalidate: false }
+      /**
+       * Goes through the shared fetcher so the request carries the API base URL
+       * and the auth header. It previously used bare `fetch()` with a relative
+       * path, which hit the frontend origin instead and — behind the SPA
+       * rewrite — got index.html back, so `res.json()` always rejected.
+       */
+      preload(
+        `/products/api/detail-products/?page=${currentPage + 1}`,
+        fetcher
       );
     }
   }, [data, currentPage, totalPages]);
@@ -41,8 +41,8 @@ export default function ProductList() {
 
   // === Client-side search filtering ===
   const filteredProducts = useMemo(() => {
-    if (!searchTerm.trim()) return allProducts;
-    const term = searchTerm.toLowerCase();
+    if (!deferredSearch.trim()) return allProducts;
+    const term = deferredSearch.toLowerCase();
     return allProducts.filter(
       (p) =>
         p.name?.toLowerCase().includes(term) ||
@@ -50,7 +50,7 @@ export default function ProductList() {
         p.category?.toLowerCase().includes(term) ||
         p.brand?.toLowerCase().includes(term)
     );
-  }, [allProducts, searchTerm]);
+  }, [allProducts, deferredSearch]);
 
   // === Scroll to top on page change ===
   useLayoutEffect(() => {
@@ -60,13 +60,7 @@ export default function ProductList() {
     }
   }, [allProducts]);
 
-  // === Debounced search handler ===
-  const debouncedSearch = useCallback(
-    debounce((value) => setSearchTerm(value), 300),
-    []
-  );
-
-  const handleSearchChange = (e) => debouncedSearch(e.target.value);
+  const handleSearchChange = (e) => setSearchTerm(e.target.value);
 
   // === Page navigation ===
   const handlePageChange = (newPage) => {
@@ -92,6 +86,7 @@ export default function ProductList() {
       <div className="mb-6 flex flex-col md:flex-row justify-between items-center gap-4">
         <input
           type="text"
+          value={searchTerm}
           onChange={handleSearchChange}
           placeholder="Search products..."
           className="w-full md:w-1/2 px-4 py-2 border rounded-md shadow-sm"

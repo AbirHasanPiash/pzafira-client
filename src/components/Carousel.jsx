@@ -56,6 +56,15 @@ const Carousel = () => {
 
   const { heading, subheading, image } = carouselData[currentIndex];
 
+  // Fetch the next slide while the current one is on screen, so the transition
+  // never waits on the network.
+  useEffect(() => {
+    const next = carouselData[(currentIndex + 1) % totalSlides];
+    if (!next) return;
+    const img = new Image();
+    img.src = next.image;
+  }, [currentIndex, totalSlides]);
+
   return (
     <section className="relative bg-white py-10 my-20 overflow-hidden">
       <div className="container px-6 sm:px-10 md:px-16 max-w-7xl mx-auto">
@@ -83,6 +92,10 @@ const Carousel = () => {
                 key={currentIndex + "-image"}
                 src={image}
                 alt={heading}
+                width="1280"
+                height="853"
+                loading="lazy"
+                decoding="async"
                 className="absolute inset-0 w-full h-full object-cover rounded-3xl"
                 custom={direction}
                 variants={variants}

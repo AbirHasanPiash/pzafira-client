@@ -76,7 +76,9 @@ const OfferSection = ({ endDate }) => {
         {/* Right Image */}
         <div className="w-full lg:w-1/2 flex justify-center">
           <img
-            src="images/family_fashion.jpeg"
+            loading="lazy"
+            decoding="async"
+            src="/images/family_fashion.webp"
             alt="Sale Offer"
             className="w-full max-w-md rounded-2xl shadow-lg object-cover"
           />

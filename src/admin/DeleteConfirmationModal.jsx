@@ -1,8 +1,12 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
 
+// `onConfirm` and `setIsDeleting` stay unused while demo protection is on;
+// both are used again once the request in handleDelete is uncommented.
+/* eslint-disable no-unused-vars */
 const DeleteConfirmationModal = ({ isOpen, onClose, onConfirm, itemName = "item" }) => {
   const [isDeleting, setIsDeleting] = useState(false);
+  /* eslint-enable no-unused-vars */
 
   if (!isOpen) return null;
 

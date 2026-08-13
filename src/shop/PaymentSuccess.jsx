@@ -8,7 +8,7 @@ const PaymentSuccess = () => {
         <FaCheckCircle className="text-green-500 text-6xl md:text-7xl mx-auto mb-4" />
         <h1 className="text-xl md:text-2xl font-bold mb-2">Payment Successful</h1>
         <p className="text-sm md:text-base text-gray-600 mb-4">
-          Thank you for your order! We're now processing it.
+          Thank you for your order! We&apos;re now processing it.
         </p>
         <Link
           name="dashboard-btn"

@@ -50,6 +50,10 @@ const TrendingNow = () => {
                 <img
                   src={item.image}
                   alt={item.title}
+                  width="1024"
+                  height="1536"
+                  loading="lazy"
+                  decoding="async"
                   className="w-full object-cover rounded-3xl transition-transform duration-500 hover:scale-105"
                 />
               </div>

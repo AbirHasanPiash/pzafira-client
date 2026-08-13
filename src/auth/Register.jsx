@@ -16,19 +16,16 @@ const Register = () => {
     password: "",
     re_password: ""
   });
-  const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showRePassword, setShowRePassword] = useState(false);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
-    setError("");
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError("");
 
     try {
       await api.post("/auth/users/", form);
@@ -42,7 +39,6 @@ const Register = () => {
       const message = errorData
         ? Object.values(errorData).flat().join(" ")
         : "Registration failed. Please try again.";
-      setError(message);
       toast.error(message, {
         position: "top-center",
         autoClose: 4000,

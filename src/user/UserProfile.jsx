@@ -1,10 +1,9 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
 import useSWR from "swr";
 import api from "../api/axios";
 import { Dialog } from "@headlessui/react";
 import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
-import AuthContext from "../auth/AuthProvider";
 import {
   UserIcon,
   PhoneIcon,
@@ -20,14 +19,12 @@ import {
 const fetcher = (url) => api.get(url).then((res) => res.data);
 
 const UserProfile = () => {
-  const { logout } = useContext(AuthContext);
   const navigate = useNavigate();
 
   // ✅ SWR replaces useEffect-based fetching
   const {
     data: user,
     error,
-    mutate,
   } = useSWR("/auth/profile/", fetcher, {
     shouldRetryOnError: false,
     revalidateOnFocus: true,
@@ -115,6 +112,8 @@ const UserProfile = () => {
         {/* Profile Image */}
         <div className="relative">
           <img
+            loading="lazy"
+            decoding="async"
             src={
               user.profile_picture ||
               `https://ui-avatars.com/api/?name=${encodeURIComponent(
