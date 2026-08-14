@@ -271,7 +271,7 @@ pzafira-client/
 | --- | --- |
 | Node.js | 18.x or newer (20 LTS+ recommended) |
 | npm | 9 or newer |
-| Backend API | A running [Pzafira API](https://github.com/AbirHasanPiash/pzafira-cloth-store) instance, or the hosted one (used by default) |
+| Backend API | A running [Pzafira API](https://github.com/AbirHasanPiash/pzafira-cloth-store) instance, or the hosted [Backend](https://pzafira-cloth-store.vercel.app/swagger/) |
 
 ### Installation
 
